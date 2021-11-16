@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<PropertyList>
+<generic>
+   <output>
+       <binary_mode>false</binary_mode>
+       <line_separator>;</line_separator>
+       <var_separator>;</var_separator>
+      
+       <chunk>
+         <name>longitude</name>
+         <format>X=%.6f</format>
+         <type>float</type>
+         <node>/position/longitude-deg</node>
+       </chunk>
+            
+       <chunk>
+         <name>latitude</name>
+         <format>Y=%.6f</format>
+         <type>float</type>
+         <node>/position/latitude-deg</node>
+       </chunk>
+                
+       <chunk>
+         <name>altitude</name>
+         <format>A=%.1f</format>
+         <type>float</type>
+         <node>/position/altitude-ft</node>
+         <factor>0.3048</factor>
+       </chunk>
+                  
+       <chunk>
+         <name>ground_speed</name>
+         <format>S=%.1f</format>
+         <type>float</type>
+         <node>/velocities/groundspeed-kt</node>
+         <factor>1.852</factor>
+       </chunk>
+          
+       <chunk>
+         <name>air_speed</name>
+         <format>V=%.1f</format>
+         <type>float</type>
+         <node>/velocities/airspeed-kt</node>
+         <factor>1.852</factor>
+       </chunk>
+        
+       <chunk>
+         <name>heading</name>
+         <format>H=%d</format>
+         <node>/orientation/heading-deg</node>
+       </chunk>
+         
+       <chunk>
+         <name>course</name>
+         <format>C=%d</format>
+         <node>/orientation/track-deg</node>
+       </chunk>
+       
+       <chunk>
+         <name>north_wind</name>
+         <format>N=%.1f</format>
+         <type>float</type>
+         <node>/environment/wind-from-north-fps</node>
+         <factor>0.3048</factor>
+       </chunk>
+        
+       <chunk>
+         <name>east_wind</name>
+         <format>E=%.1f</format>
+         <type>float</type>
+         <node>/environment/wind-from-east-fps</node>
+         <factor>0.3048</factor>
+       </chunk>
+
+   </output>
+ </generic>
+</PropertyList>
