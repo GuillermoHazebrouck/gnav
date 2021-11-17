@@ -1,26 +1,36 @@
+--//////////////////////////////////////////////////////////////////////////////
+-- G-NAV PROJECT
+-- Written by Guillermo HAZEBROUCK - gahazebrouck@gmail.com
+--\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- This file is part of "G-NAV".
+--
+-- G-NAV is free software: you can redistribute it and/or modify
+-- it under the terms of the GNU General Public License as published by
+-- the Free Software Foundation, either version 3 of the License, or
+-- (at your option) any later version.
+--
+-- G-NAV is distributed in the hope that it will be useful,
+-- but WITHOUT ANY WARRANTY; without even the implied warranty of
+-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-- GNU General Public License for more details.
+--
+-- You should have received a copy of the GNU General Public License
+-- along with G-NAV.  If not, see <https://www.gnu.org/licenses/>.
 --------------------------------------------------------------------------------
--- LIBRARY_UNIT_NAME : Hmi.Static_Buffer
---
--- DESIGNER          : Guillermo HAZEBROUCK
---
--- CREATION_DATE     : 16 Dec 2019
---
--- LAST_MODIFICATION : 16 Dec 2019 Extracted from Gl.Helper
---------------------------------------------------------------------------------
+
+-- Depencencies
+--//////////////////////////////////////////////////////////////////////////////
+
 -- External
-with Ada.Text_IO;
 with Interfaces.C;
--- Local
+-- Gnav
+with Error;
 with Gl.Resources;
 
-
-
-
-
 --******************************************************************************
 --
 --******************************************************************************
-package body Gl.Monochrome_Buffer is
+package body Gl.Colormap_Buffer is
 
    --===========================================================================
    -- (See specification file)
@@ -41,68 +51,35 @@ package body Gl.Monochrome_Buffer is
    --===========================================================================
    -- (See specification file)
    --===========================================================================
-   procedure Load_Vertex (X, Y : Float) is
+   procedure Load_Vertex (X, Y, R, G, B : Gl_Float) is
    begin
 
       if Count < Size then
 
          Offset := Offset + 1;
-         Buffer (Offset) := Gl_Float (X);
+         Buffer (Offset) := X;
 
          Offset := Offset + 1;
-         Buffer (Offset) := Gl_Float (Y);
+         Buffer (Offset) := Y;
+
+         Offset := Offset + 1;
+         Buffer (Offset) := R;
+
+         Offset := Offset + 1;
+         Buffer (Offset) := G;
+
+         Offset := Offset + 1;
+         Buffer (Offset) := B;
 
          Count := Count + 1;
 
       else
 
-         Ada.Text_IO.Put_Line ("insufficient buffer size");
+         Error.Put_Line ("insufficient buffer size");
 
       end if;
 
    end Load_Vertex;
-   -----------------------------------------------------------------------------
-
-
-
-
-   --===========================================================================
-   -- (See specification file)
-   --===========================================================================
-   procedure Load_Vertex (X, Y : Integer) is
-   begin
-
-      if Count < Size then
-
-         Offset := Offset + 1;
-         Buffer (Offset) := Gl_Float (X);
-
-         Offset := Offset + 1;
-         Buffer (Offset) := Gl_Float (Y);
-
-         Count := Count + 1;
-
-      else
-
-         Ada.Text_IO.Put_Line ("insufficient buffer size");
-
-      end if;
-
-   end Load_Vertex;
-   -----------------------------------------------------------------------------
-
-
-
-
-   --===========================================================================
-   -- (See specification file)
-   --===========================================================================
-   function Get_Offset return Natural is
-   begin
-
-      return Offset;
-
-   end Get_Offset;
    -----------------------------------------------------------------------------
 
 
@@ -171,42 +148,11 @@ package body Gl.Monochrome_Buffer is
 
          Gl.Bind_Buffer (GL_ARRAY_BUFFER, This.Id);
 
-         Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
+         Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 5 * Gl_Float_Size, 0);
+
+         Gl.Vertex_Attrib_Pointer (1, 3, GL_TYPE_FLOAT, GL_FALSE, 5 * Gl_Float_Size, 2 * Gl_Float_Size);
 
          Gl.Draw_Arrays (Mode, 0, Gl_Sizei (This.Count));
-
-      end if;
-
-   end Draw;
-   -----------------------------------------------------------------------------
-
-
-
-
-   --===========================================================================
-   -- (See specification file)
-   --===========================================================================
-   procedure Draw (This : Buffer_Object; Mode : Gl_Enum; First : Gl_Int; Count : Gl_Sizei) is
-
-      use Interfaces.C;
-
-   begin
-
-      if This.Id > 0 then
-
-         if First >= 0 and then First + Count <= Gl_Int (This.Count) then
-
-            Gl.Bind_Buffer (GL_ARRAY_BUFFER, This.Id);
-
-            Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
-
-            Gl.Draw_Arrays (Mode, First, Count);
-
-         else
-
-            Ada.Text_IO.Put_Line ("sub buffer index out of range");
-
-         end if;
 
       end if;
 
@@ -267,5 +213,5 @@ package body Gl.Monochrome_Buffer is
    end;
    -----------------------------------------------------------------------------
 
-end Gl.Monochrome_Buffer;
+end Gl.Colormap_Buffer;
 --------------------------------------------------------------------------------

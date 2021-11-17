@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<Locations>
-  <Project>
-    <vfs_file>/home/guille/gnav/Gavilan/gavilan.gpr</vfs_file>
+<Locations >
+  <Project >
     <file_marker column=" 1" line=" 1" >
       <vfs_project>/home/guille/gnav/Gavilan/gavilan.gpr</vfs_project>
       <vfs_file>/home/guille/gnav/Gavilan/src/display/pages/display-pages-route_edition.ads</vfs_file>
