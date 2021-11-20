@@ -305,7 +305,7 @@ package body Display.Pages.Navigation is
       Allocation.H := H;      
       Allocation.W := W;             
       Allocation.X := 0.4 + 0.5 * W;      
-      Allocation.Y := 0.2;
+      Allocation.Y := M;
       
       Btn_Down.Set_Label ("S");
       
@@ -320,7 +320,6 @@ package body Display.Pages.Navigation is
       -- Up button
       ------------------------------------------------------
       
-      Allocation.X := 0.4 + 0.5 * W;
       Allocation.Y := 1.0 - H - M;
       
       Btn_Up.Set_Label ("N");
@@ -336,8 +335,8 @@ package body Display.Pages.Navigation is
       -- Right button
       ------------------------------------------------------
       
-      Allocation.X := 0.75 - W - M;      
-      Allocation.Y := 0.6 - 0.5 * H;
+      Allocation.X := Allocation.X - 0.2 - 0.5 * W;      
+      Allocation.Y := 0.5 - 0.5 * H;
       
       Btn_Right.Set_Label ("E");
       
@@ -352,8 +351,8 @@ package body Display.Pages.Navigation is
       -- Left button
       ------------------------------------------------------
       
-      Allocation.X := 0.225;      
-      Allocation.Y := 0.6 - 0.5 * H;
+      Allocation.X := Allocation.X + 0.4 + W;      
+      Allocation.Y := 0.5 - 0.5 * H;
       
       Btn_Left.Set_Label ("W");
       
@@ -403,9 +402,8 @@ package body Display.Pages.Navigation is
       ------------------------------------------------------  
       
       M := 0.01;
-      H := 0.12;
+      H := (1.0 - 9.0 * M) / 8.0;
       W := 0.15;
-      V := 0.04;
       
       Allocation.X := M;      
       Allocation.H := H;      
@@ -425,7 +423,7 @@ package body Display.Pages.Navigation is
       -- Move button
       ------------------------------------------------------
       
-      Allocation.Y := Allocation.Y + H + V;
+      Allocation.Y := Allocation.Y + H + M;
       
       Btn_Move.Set_Label ("MOVE");
       

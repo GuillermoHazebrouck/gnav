@@ -61,9 +61,9 @@ package Maps.Terrain is
    function Get_Elevation (Position : Position_Record) return Float;
 
    --===========================================================================
-   -- Notifies that a reload is required
+   -- Notifies that the range function has changed
    --===========================================================================
-   procedure Notify_Reload;
+   procedure Notify_Range_Changed;
 
 private
 

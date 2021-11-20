@@ -28,8 +28,10 @@ with Display.Pages.Check_List;
 with Display.Pages.Glider;
 with Display.Pages.Map;
 with Display.Pages.Navigation;
+with Display.Pages.Route_Edition;
 with Display.Pages.Strips;
 with Display.Pages.System;
+with Flight.Aircraft;
 with Flight.Plan;
 with Gl.Fonts;
 with Utility.Colors;
@@ -44,7 +46,13 @@ use  Widgets.Button;
 --//////////////////////////////////////////////////////////////////////////////
 package body Display.Menu is
    
-   type Page_Types is (Page_Navigation, Page_Strips, Page_Glider, Page_Map, Page_Check_List, Page_System);
+   type Page_Types is (Page_Navigation, 
+                       Page_Strips, 
+                       Page_Route_Edition, 
+                       Page_Glider, 
+                       Page_Map, 
+                       Page_Check_List, 
+                       Page_System);
    
    Active_Page : Page_Types := Page_Navigation;
    
@@ -79,17 +87,19 @@ package body Display.Menu is
    -- Main menu buttons
    ---------------------------------
 
-   Btn_Strips  : Button_Record;
+   Btn_Strips        : Button_Record;
    
-   Btn_Glider      : Button_Record;
+   Btn_Route_Edition : Button_Record;
+   
+   Btn_Glider        : Button_Record;
       
-   Btn_Check_List  : Button_Record;
+   Btn_Check_List    : Button_Record;
    
-   Btn_Map_Options : Button_Record;
-   
-   Btn_System      : Button_Record;
+   Btn_Map_Options   : Button_Record;
+     
+   Btn_System        : Button_Record;
       
-   Btn_Exit        : Button_Record;
+   Btn_Exit          : Button_Record;
    
    --===========================================================================
    -- (See specifications file)
@@ -97,10 +107,9 @@ package body Display.Menu is
    procedure Init is
       
       M : constant Dimension_Float := 0.01;
-      H : constant Dimension_Float := 0.12;
+      H : constant Dimension_Float := (1.0 - 9.0 * M) / 8.0;
       W : constant Dimension_Float := 0.15;
-      V : constant Dimension_Float := 0.01;
-      
+
       Allocation : Allocation_Record;
       
    begin
@@ -115,7 +124,7 @@ package body Display.Menu is
         
       -- Flight plan page button
       ------------------------------------------------------
-      Btn_Strips.Set_Label ("FLIGHT");
+      Btn_Strips.Set_Label ("STRIP");
       
       Btn_Strips.Set_Allocation (Allocation);
       
@@ -125,12 +134,27 @@ package body Display.Menu is
                                       Glow => Color_Black);
       
       Btn_Strips.Set_Font_Size (0.3, 0.3);
+              
+      -- Route editor page button
+      ------------------------------------------------------
+      Btn_Route_Edition.Set_Label ("ROUTE");
       
-      -- Checklist page button
+      Allocation.Y := Allocation.Y - H - M;
+      
+      Btn_Route_Edition.Set_Allocation (Allocation);
+      
+      Btn_Route_Edition.Set_Background_Color (Color_Black.With_Alpha (0.5));
+      
+      Btn_Route_Edition.Set_Label_Color (Fore => Color_White,
+                                         Glow => Color_Black);
+      
+      Btn_Route_Edition.Set_Font_Size (0.3, 0.3);
+      
+      -- Glider page button
       ------------------------------------------------------
       Btn_Glider.Set_Label ("GLIDER");
       
-      Allocation.Y := Allocation.Y - H - V;
+      Allocation.Y := Allocation.Y - H - M;
       
       Btn_Glider.Set_Allocation (Allocation);
             
@@ -145,7 +169,7 @@ package body Display.Menu is
       ------------------------------------------------------
       Btn_Map_Options.Set_Label ("MAP");
       
-      Allocation.Y := Allocation.Y - H - V;
+      Allocation.Y := Allocation.Y - H - M;
       
       Btn_Map_Options.Set_Allocation (Allocation);
             
@@ -160,7 +184,7 @@ package body Display.Menu is
       ------------------------------------------------------
       Btn_Check_List.Set_Label ("CHECK");
       
-      Allocation.Y := Allocation.Y - H - V;
+      Allocation.Y := Allocation.Y - H - M;
       
       Btn_Check_List.Set_Allocation (Allocation);
             
@@ -175,7 +199,7 @@ package body Display.Menu is
       ------------------------------------------------------
       Btn_System.Set_Label ("SYSTEM");
       
-      Allocation.Y := Allocation.Y - H - V;
+      Allocation.Y := Allocation.Y - H - M;
       
       Btn_System.Set_Allocation (Allocation);
             
@@ -212,6 +236,8 @@ package body Display.Menu is
       
       Display.Pages.Strips.Init;
       
+      Display.Pages.Route_Edition.Init;
+      
       Display.Pages.Glider.Init;
       
       Display.Pages.Map.Init;
@@ -243,6 +269,8 @@ package body Display.Menu is
             
             Btn_Strips.Draw;
             
+            Btn_Route_Edition.Draw;
+            
             Btn_Glider.Draw;
             
             Btn_Map_Options.Draw;
@@ -251,6 +279,12 @@ package body Display.Menu is
          
             Btn_System.Draw;
          
+         when Page_Route_Edition =>
+            
+            Display.Pages.Route_Edition.Draw (Width, Height);
+         
+            Btn_Exit.Draw;
+              
          when Page_Strips =>
             
             Display.Pages.Strips.Draw (Width, Height);
@@ -305,12 +339,20 @@ package body Display.Menu is
          
             Active_Page := Page_Strips;
             
-            Flight.Plan.Jump_In_Proximity := not Display.Pages.Strips.Editing;
-      
             Display.Refresh := True;
          
             return;
         
+         elsif Btn_Route_Edition.Contains (X, Y) then
+            
+            Active_Page := Page_Route_Edition;
+            
+            Flight.Plan.Jump_In_Proximity := False;
+                    
+            Display.Refresh := True;
+         
+            return;
+                        
          elsif Btn_Glider.Contains (X, Y) then
          
             Active_Page := Page_Glider;
@@ -347,6 +389,12 @@ package body Display.Menu is
           
       elsif Btn_Exit.Contains (X, Y) then
       
+         if Active_Page = Page_Glider then
+            
+            Flight.Aircraft.Calculate_Gliding_States;
+            
+         end if;
+                  
          Active_Page := Page_Navigation;
         
          Flight.Plan.Jump_In_Proximity := True;
@@ -371,6 +419,10 @@ package body Display.Menu is
         
             Display.Pages.Strips.Screen_Pressed (X, Y);
          
+         when Page_Route_Edition =>
+            
+            Display.Pages.Route_Edition.Screen_Pressed (X, Y);
+                       
          when Page_Glider =>
             
             Display.Pages.Glider.Screen_Pressed (X, Y);
@@ -424,6 +476,10 @@ package body Display.Menu is
          when Page_Strips =>
             
             Pages.Strips.Key_Changed (Key);
+            
+         when Page_Route_Edition =>
+            
+            Pages.Route_Edition.Key_Changed (Key);
             
          when Page_Glider =>
             

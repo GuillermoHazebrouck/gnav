@@ -263,6 +263,8 @@ package body Display.Pages.Glider is
 
                Mass_Points (I).Mass := Float'Min (150.0, Mass_Points (I).Mass + 1.0);
 
+               Flight.Aircraft.Recalculate_Mass;
+
                Display.Refresh := True;
 
                return;
@@ -270,6 +272,8 @@ package body Display.Pages.Glider is
             elsif Mass_Controls (I).Btn_Less.Contains (X, Y) then
 
                Mass_Points (I).Mass := Float'Max (0.0, Mass_Points (I).Mass - 1.0);
+
+               Flight.Aircraft.Recalculate_Mass;
 
                Display.Refresh := True;
 

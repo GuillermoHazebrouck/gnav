@@ -1,8 +1,18 @@
-# Object file
-*.o
+# Objects
+Gavilan/obj/*.o
 
-# Ada Library Information
-*.ali
+# The Gavilan executable
+Gavilan/bin/gavilan
+
+# Scripts to syncrhonize the code with local storage
+Gavilan/sync_nas.sh
+Gavilan/sync_usb.sh
 
 # Map data
 Gavilan/bin/maps/belgium/terrain.bin
+
+# Stratux defaults (only script)
+Stratux/stratux/*
+Stratux/rtl-sdr/*
+Stratux/kalibrate-rtl/*
+Stratux/*.gz

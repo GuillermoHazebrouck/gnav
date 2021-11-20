@@ -135,7 +135,6 @@ package body Flight.Aircraft is
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    type Range_Cone_Record is tagged record
 
-      Active   : Boolean         := False;              -- active/inactive
       Center   : Position_Record := No_Position_Record; -- reference position
       Altitude : Float           := 1000.0;             -- reference altitude
       Wind     : Vector2_Record  := No_Vector2_Record;  -- reference wind
@@ -165,7 +164,7 @@ package body Flight.Aircraft is
    --===========================================================================
    -- (See specification file)
    --===========================================================================
-   procedure Recalculate_Mass is 
+   procedure Recalculate_Mass is
    begin
       
       Total_Mass := Empty_Mass;
@@ -413,8 +412,8 @@ package body Flight.Aircraft is
                
       end loop;
             
-      Maps.Terrain.Notify_Reload;
-         
+      Maps.Terrain.Notify_Range_Changed;
+            
    end Calculate_Gliding_Spectrum;
    -----------------------------------------------------------------------------
      
@@ -436,8 +435,6 @@ package body Flight.Aircraft is
       
       if R > 0.0 then
                
-         Put_Line ("P=" & Float'Image (P) & " I=" & Natural'Image (I) & " R=" & Float'Image (R) & " A=" & Float'Image (A) & " D=" & Float'Image (D));
-                
          return A - D / R;
                
       else
@@ -513,13 +510,15 @@ package body Flight.Aircraft is
          
          Range_Cone.Wind := Flight.Data.Wind;
          
+         Calculate_Gliding_Spectrum;
+         
          Changed := True;
          
       end if;
       
       if Changed then
          
-         Maps.Terrain.Notify_Reload;
+         Maps.Terrain.Notify_Range_Changed;
          
       end if;
                

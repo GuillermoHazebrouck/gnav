@@ -22,7 +22,6 @@
 --//////////////////////////////////////////////////////////////////////////////
 
 -- Gnav
-with Display.Pages.Route_Edition;
 with Display.Flight_Panel;
 with Display.Compass;
 with Gl.Fonts;
@@ -40,12 +39,7 @@ use  Widgets.Widget;
 --
 --//////////////////////////////////////////////////////////////////////////////
 package body Display.Pages.Strips is
-        
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   -- Indicates if the edition mode is on
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   In_Edition_Mode : Boolean;
-   
+
    -- Fonts
    ---------------------------------
    Font_1 : Gl.Fonts.Font_Style_Record := (Width     => 0.014, 
@@ -95,8 +89,6 @@ package body Display.Pages.Strips is
    Btn_Down   : Button_Record;
   
    Btn_Back   : Button_Record;
-   
-   Btn_Accept : Button_Record;
    
    --///////////////////////////////////////////////////////////////////////////
    -- Task strips
@@ -301,48 +293,8 @@ package body Display.Pages.Strips is
       ------------------------------------------------------  
       
       Display.Flight_Panel.Init;
-                        
-      -- Editor
-      ------------------------------------------------------
-            
-      Display.Pages.Route_Edition.Init;
-      
-      -- Button to accept the edition
-      ------------------------------------------------------
-
-      Allocation.Y := 0.78;
-      
-      Allocation.X := 0.01;
-      
-      Allocation.W := 0.15;
-      
-      Allocation.H := 0.10;
-      
-      Btn_Accept.Set_Label ("< LIST");
-      
-      Btn_Accept.Set_Allocation (Allocation);
-      
-      Btn_Accept.Set_Font_Size (0.4, 0.3);
-      
-      Btn_Accept.Set_Background_Color (Color_Gray_3);
-      
-      Btn_Accept.Set_Border_Color (Color_Black);
-        
+     
    end Init;
-   -----------------------------------------------------------------------------
-
-   
-   
-   
-   --===========================================================================
-   -- (See specification file)
-   --===========================================================================
-   function Editing return Boolean is
-   begin
-      
-      return In_Edition_Mode;
-      
-   end Editing;
    -----------------------------------------------------------------------------
    
         
@@ -367,17 +319,7 @@ package body Display.Pages.Strips is
       Is_Home     : Boolean := False;
       
    begin
-         
-      if In_Edition_Mode then
-         
-         Display.Pages.Route_Edition.Draw (Width, Height);
-         
-         Btn_Accept.Draw;
-         
-         return;
-         
-      end if;
-            
+       
       for I in Waypoint_Range loop
             	   
          exit when not Flight_Plan.Waypoints(I).Is_Loaded;
@@ -685,29 +627,7 @@ package body Display.Pages.Strips is
    --===========================================================================
    procedure Screen_Pressed (X, Y : Float) is
    begin
-      
-      -- Edition mode
-      --------------------------------------------------------------------------
-      if In_Edition_Mode then
-         
-         if Btn_Accept.Contains (X, Y) then
-            
-            In_Edition_Mode := False;
-            
-            Flight.Plan.Jump_In_Proximity := True;
-      
-            Refresh := True;
-            
-         else
-            
-            Display.Pages.Route_Edition.Screen_Pressed (X, Y);
-            
-         end if;
-         
-         return;
-         
-      end if;
-              
+   
       -- Normal mode
       --------------------------------------------------------------------------             
       Display.Flight_Panel.Screen_Pressed (X, Y);
@@ -746,12 +666,8 @@ package body Display.Pages.Strips is
              
       elsif Btn_Name.Contains (X, Y) then
              
-         In_Edition_Mode := True;
+         null;
          
-         Flight.Plan.Jump_In_Proximity := False;
-      
-         Refresh := True;
-             
       end if;
             
    end Screen_Pressed;
@@ -765,16 +681,6 @@ package body Display.Pages.Strips is
    --===========================================================================
    procedure Key_Changed (Key : Front_Panel_Keys) is
    begin
-      
-      -- Edition mode
-      --------------------------------------------------------------------------
-      if In_Edition_Mode then
-             
-         Display.Pages.Route_Edition.Key_Changed (Key);
-         
-         return;
-         
-      end if;
       
       -- Normal mode
       --------------------------------------------------------------------------

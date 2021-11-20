@@ -85,6 +85,18 @@ package body Flight.Simu is
 
       Reader : String_Buffer (100);
 
+      --========================================================================
+      -- Registers the data aquisition timer
+      --========================================================================
+      procedure Register_Timer is
+      begin
+
+         Timing.Events.Register_Timer (Timer    => Timing.Time_Delta,
+                                       Callback => Read_Step'Access);
+
+      end Register_Timer;
+      --------------------------------------------------------------------------
+
    begin
 
       for I in 1..Ada.Command_Line.Argument_Count loop
@@ -123,6 +135,8 @@ package body Flight.Simu is
 
                   Reset (File_Id);
 
+                  Register_Timer;
+
                   return;
 
                else
@@ -150,6 +164,8 @@ package body Flight.Simu is
 
                Store.Buffer := Data'Unrestricted_Access;
 
+               Register_Timer;
+
                return;
 
             end if;
@@ -157,9 +173,6 @@ package body Flight.Simu is
          end;
 
       end loop;
-
-      Timing.Events.Register_Timer (Timer    => Timing.Time_Delta,
-                                    Callback => Read_Step'Access);
 
    end Init;
    -----------------------------------------------------------------------------
@@ -331,7 +344,7 @@ package body Flight.Simu is
 
          end loop;
 
-      -- Case B: Online socket data (from flight simulator or GPS)
+      -- Case B: Online socket data (from flight simulator or middleware)
       --------------------------------------------------------------------------
       else
 

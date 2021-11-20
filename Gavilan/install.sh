@@ -4,11 +4,12 @@
 # Function: this scrip installs the Gavilan program and default
 #           data. Gavilan must be located in the /home/pi/Gavilan
 #           folder to work.
-#           The script will install all dependencies and compile the
-#           source code. Then it will apply the necessary desktop
-#           configuration to launch the program at startup in full
+#           The script will install all dependencies (OpenGL and GLGW) 
+#           and compile the source code. Then it will apply the necessary 
+#           desktop configuration to launch the program at startup in full
 #           scren mode, with the front panel active and the ability to
-#           shut down and restart the whole computer.
+#           shut down and restart the whole computer. If you don't want
+#           this, comment out steps 6 and 7.
 # Warning:  once the script is run, Gavilan will automatically start
 #           after reboot and hide the desktop. The application
 #           will also persist to restart after program failures.

@@ -140,12 +140,16 @@ package body Maps.Terrain is
    --===========================================================================
    -- Notifies that a reload is required
    --===========================================================================
-   procedure Notify_Reload is
+   procedure Notify_Range_Changed is
    begin
 
-      Reload := True;
+      if Old_View.Cone_Active then
 
-   end Notify_Reload;
+         Reload := True;
+
+      end if;
+
+   end Notify_Range_Changed;
    -----------------------------------------------------------------------------
 
 
