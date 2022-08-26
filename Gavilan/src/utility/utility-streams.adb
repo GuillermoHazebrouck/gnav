@@ -20,9 +20,8 @@
 
 -- Depencencies
 --//////////////////////////////////////////////////////////////////////////////
-
--- Standard
-with Ada.Text_IO;
+-- Gnav
+with Utility.Log;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -74,7 +73,7 @@ package body Utility.Streams is
 
             This.End_Off_Buffer := True;
 
-            Ada.Text_IO.Put_Line ("end of buffer");
+            Utility.Log.Put_Message ("end of buffer");
 
          end if;
 
@@ -88,7 +87,7 @@ package body Utility.Streams is
 
          Last := Item'Last;
 
-         Ada.Text_IO.Put_Line ("buffer out of range");
+         Utility.Log.Put_Message ("buffer out of range");
 
       end if;
 
@@ -114,7 +113,7 @@ package body Utility.Streams is
 
          This.Cursor := This.Buffer'Last;
 
-         Ada.Text_IO.Put_Line ("end of buffer");
+         Utility.Log.Put_Message ("end of buffer");
 
          return;
 
@@ -167,7 +166,7 @@ package body Utility.Streams is
 
          This.Cursor := This.Buffer'Last;
 
-         Ada.Text_IO.Put_Line ("end of buffer");
+         Utility.Log.Put_Message ("end of buffer");
 
       end if;
 
@@ -192,7 +191,7 @@ package body Utility.Streams is
 
          This.Cursor := This.Buffer'Last;
 
-         Ada.Text_IO.Put_Line ("end of buffer");
+         Utility.Log.Put_Message ("end of buffer");
 
       end if;
 

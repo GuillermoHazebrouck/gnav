@@ -20,9 +20,8 @@
 
 -- Depencencies
 --//////////////////////////////////////////////////////////////////////////////
-
--- Standard
-with Ada.Text_IO;
+-- Gnav
+with Utility.Log;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -69,7 +68,7 @@ package body Gl.Resources is
 
    exception
       when E : others =>
-         Ada.Text_IO.Put_Line ("while updating GPU resources");
+         Utility.Log.Put_Message (E, "error while updating GPU resources");
 
    end Update_Resource;
    -----------------------------------------------------------------------------

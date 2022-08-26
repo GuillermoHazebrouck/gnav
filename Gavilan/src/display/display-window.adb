@@ -25,14 +25,14 @@
 with Ada.Command_Line;
 with Ada.Real_Time;
 use  Ada.Real_Time;
-with Ada.Text_IO;
 -- Gnav
 with Display.Menu;
 with Timing;
 with Timing.Events;
 with Flight.Aircraft;
 with Flight.Plan;
-with Flight.Simu;
+with Flight.Representation;
+with Flight.Stream;
 with Glfw;
 with Glfw.Monitors;
 with Glfw.Windows;
@@ -44,6 +44,8 @@ with Gl;
 with Gl.Shaders;
 with Gl.Fonts;
 with Glfw.Input.Mouse;
+with Maps.Loader;
+with Utility.Log;
 with Utility.Strings;
 with Widgets.Keyboard;
 
@@ -121,7 +123,7 @@ package body Display.Window is
 
       Glfw.Windows.Init (Main_Window'Access, W, H, "Gavilan");
 
-      Ada.Text_IO.Put_Line ("loading command line config");
+      Utility.Log.Put_Message ("loading command line config");
 
       for I in 1..Ada.Command_Line.Argument_Count loop
 
@@ -136,7 +138,7 @@ package body Display.Window is
                Val : String := Argument.Read_Next ('=');
             begin
 
-               Ada.Text_IO.Put_Line ("checking option " & key & " with " &Val);
+               Utility.Log.Put_Message ("checking option " & key & " with " &Val);
 
                if Key = "ON_BOARD" then
 
@@ -153,7 +155,7 @@ package body Display.Window is
 
                elsif Key = "DISTORSION" then
 
-                  Ada.Text_IO.Put_Line ("correcting distorsion by factor " & Val);
+                  Utility.Log.Put_Message ("correcting distorsion by factor " & Val);
 
                   Distorsion := Float'Value (Val);
 
@@ -169,25 +171,28 @@ package body Display.Window is
 
       Main_Window.Set_Decorated (False);
 
-      Ada.Text_IO.Put_Line ("GLFW version: " & Glfw.Version_String);
+      Utility.Log.Put_Message ("GLFW version: " & Glfw.Version_String);
 
       Main_Window.Set_Mouse_Button_Changed (Mouse_Button_Changed'Access);
 
       Main_Window.Set_Key_Changed (Key_Changed'Access);
 
+      -- Initialization sequence
+      --------------------------
+
       Gl.Shaders.Init (Gl.Shaders.Glsl_330, 1);
 
       Gl.Fonts.Init;
+
+      Widgets.Keyboard.Init;
+
+      Flight.Stream.Init;
 
       Flight.Aircraft.Init;
 
       Flight.Plan.Init;
 
-      Flight.Simu.Init;
-
       Display.Menu.Init;
-
-      Widgets.Keyboard.Init;
 
       Gl.Translate (Matrix, -1.0, -1.0, 0.0);
 
@@ -224,6 +229,10 @@ package body Display.Window is
 
             Main_Window.Get_Size (W, H);
 
+            Width := Distorsion * Float (W);
+
+            Height := Float (H);
+
             Gl.Enable      (GL_BLEND);
             Gl.Blend_Func  (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             Gl.Clear_Color (0.2, 0.2, 0.2, 1.0);
@@ -240,7 +249,9 @@ package body Display.Window is
             -- Draw display (the Menu has the root call)
             -----------------------------------------------------
 
-            Display.Menu.Draw (Distorsion * Float (W), Float (H));
+            Flight.Representation.Flush_Path;
+
+            Display.Menu.Draw;
 
             Glfw.Windows.Context.Swap_Buffers (Main_Window'Access);
 
@@ -271,6 +282,8 @@ package body Display.Window is
 
       end loop;
 
+      Flight.Stream.Finalize;
+
       Glfw.Shutdown;
 
       Alive := False;
@@ -280,6 +293,8 @@ package body Display.Window is
          Ada.Command_Line.Set_Exit_Status (9);
 
       end if;
+
+      Utility.Log.Put_Message ("program closed");
 
    end Enter_Main_Loop;
    -----------------------------------------------------------------------------
@@ -370,7 +385,7 @@ package body Display.Window is
 
       --------------------------------------------------------------------------
 
-      Ada.Text_IO.Put_Line (Glfw.Input.Keys.Key'Image (Key));
+      Utility.Log.Put_Message ("key pressed: " & Glfw.Input.Keys.Key'Image (Key));
 
       case Key is
 

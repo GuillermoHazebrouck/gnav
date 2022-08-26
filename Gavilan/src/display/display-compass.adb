@@ -166,6 +166,7 @@ package body Display.Compass is
    --===========================================================================
    procedure Draw (X, Y, Size, Aspect : Float; Font : Fonts.Font_Style_Record) is
 
+      use Flight;
       use Ada.Numerics;
 
       M1 : Gl.Gl_Mat_4 := Gl.Shaders.Get_Active_Matrix;
@@ -174,11 +175,17 @@ package body Display.Compass is
 
       M3 : Gl.Gl_Mat_4 := Gl.Gl_Mat_4_Identity;
 
-      Course : Float := Flight.Data.Course * Pi / 180.0;
+      Course : Float := 0.0;
 
       Angle  : Float;
 
    begin
+
+      if Flight.Data.Is_Recent (Field_Course) then
+
+         Course := Flight.Data.Course * Pi / 180.0;
+
+      end if;
 
       Translate (M2, X, Y, 0.0);
 
@@ -338,102 +345,118 @@ package body Display.Compass is
 
       Gl.Draw_Arrays (GL_POINTS, 0, 3);
 
-      -- Waypoint arrow
-      --------------------------------------------------------------------------
+      if Flight.Data.Is_Recent (Field_Course) then
 
-      Angle := Flight.Data.Course - Flight.Plan.Next_Waypoint.Bearing;
+         -- Waypoint arrow
+         --------------------------------------------------------------------------
 
-      if Angle < 0.0 then
+         Angle := Flight.Data.Course - Flight.Plan.Next_Waypoint.Bearing;
 
-         Angle := 360.0 + Angle;
+         if Angle < 0.0 then
+
+            Angle := 360.0 + Angle;
+
+         end if;
+
+         Angle := Angle * Pi / 180.0;
+
+         M2 := Gl_Mat_4_Identity;
+
+         Translate (M2, X, Y, 0.0);
+
+         Scale     (M2, Size, Size * Aspect, 1.0);
+
+         Rotate    (M2, Angle);
+
+         M2 := Multiply  (M1, M2);
+
+         Gl.Shaders.Load_Matrix (M2);
+
+         Gl.Bind_Buffer (GL_ARRAY_BUFFER, Waypoint_Id);
+
+         Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
+
+         Gl.Shaders.Bind_Shader (Gl.Shaders.Monochrome_2D);
+
+         Gl.Shaders.Load_Color (1.0, 0.3, 1.0, 1.0);
+
+         Gl.Draw_Arrays (GL_TRIANGLES, 0, 3);
+
+         Gl.Shaders.Bind_Shader (Gl.Shaders.Lines_2D);
+
+         Gl.Shaders.Load_Color (0.4, 0.1, 0.4, 1.0);
+
+         Gl.Shaders.Load_Width (1.0);
+
+         Gl.Draw_Arrays (GL_LINE_LOOP, 0, 3);
+
+         -- Home arrow
+         --------------------------------------------------------------------------
+
+         Angle := Flight.Data.Course - Flight.Plan.Home_Waypoint.Bearing;
+
+         if Angle < 0.0 then
+
+            Angle := 360.0 + Angle;
+
+         end if;
+
+         Angle := Angle * Pi / 180.0;
+
+         M2 := Gl_Mat_4_Identity;
+
+         Translate (M2, X, Y, 0.0);
+
+         Scale     (M2, Size, Size * Aspect, 1.0);
+
+         Rotate    (M2, Angle);
+
+         M2 := Multiply  (M1, M2);
+
+         Gl.Shaders.Load_Matrix (M2);
+
+         Gl.Bind_Buffer (GL_ARRAY_BUFFER, Waypoint_Id);
+
+         Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
+
+         Gl.Shaders.Bind_Shader (Gl.Shaders.Monochrome_2D);
+
+         Gl.Shaders.Load_Color (0.3, 1.0, 0.30, 1.0);
+
+         Gl.Draw_Arrays (GL_TRIANGLES, 0, 3);
+
+         Gl.Shaders.Bind_Shader (Gl.Shaders.Lines_2D);
+
+         Gl.Shaders.Load_Color (0.1, 0.4, 0.1, 1.0);
+
+         Gl.Shaders.Load_Width (1.0);
+
+         Gl.Draw_Arrays (GL_LINE_LOOP, 0, 3);
 
       end if;
-
-      Angle := Angle * Pi / 180.0;
-
-      M2 := Gl_Mat_4_Identity;
-
-      Translate (M2, X, Y, 0.0);
-
-      Scale     (M2, Size, Size * Aspect, 1.0);
-
-      Rotate    (M2, Angle);
-
-      M2 := Multiply  (M1, M2);
-
-      Gl.Shaders.Load_Matrix (M2);
-
-      Gl.Bind_Buffer (GL_ARRAY_BUFFER, Waypoint_Id);
-
-      Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
-
-      Gl.Shaders.Bind_Shader (Gl.Shaders.Monochrome_2D);
-
-      Gl.Shaders.Load_Color (1.0, 0.3, 1.0, 1.0);
-
-      Gl.Draw_Arrays (GL_TRIANGLES, 0, 3);
-
-      Gl.Shaders.Bind_Shader (Gl.Shaders.Lines_2D);
-
-      Gl.Shaders.Load_Color (0.4, 0.1, 0.4, 1.0);
-
-      Gl.Shaders.Load_Width (1.0);
-
-      Gl.Draw_Arrays (GL_LINE_LOOP, 0, 3);
-
-      -- Home arrow
-      --------------------------------------------------------------------------
-
-      Angle := Flight.Data.Course - Flight.Plan.Home_Waypoint.Bearing;
-
-      if Angle < 0.0 then
-
-         Angle := 360.0 + Angle;
-
-      end if;
-
-      Angle := Angle * Pi / 180.0;
-
-      M2 := Gl_Mat_4_Identity;
-
-      Translate (M2, X, Y, 0.0);
-
-      Scale     (M2, Size, Size * Aspect, 1.0);
-
-      Rotate    (M2, Angle);
-
-      M2 := Multiply  (M1, M2);
-
-      Gl.Shaders.Load_Matrix (M2);
-
-      Gl.Bind_Buffer (GL_ARRAY_BUFFER, Waypoint_Id);
-
-      Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
-
-      Gl.Shaders.Bind_Shader (Gl.Shaders.Monochrome_2D);
-
-      Gl.Shaders.Load_Color (0.3, 1.0, 0.30, 1.0);
-
-      Gl.Draw_Arrays (GL_TRIANGLES, 0, 3);
-
-      Gl.Shaders.Bind_Shader (Gl.Shaders.Lines_2D);
-
-      Gl.Shaders.Load_Color (0.1, 0.4, 0.1, 1.0);
-
-      Gl.Shaders.Load_Width (1.0);
-
-      Gl.Draw_Arrays (GL_LINE_LOOP, 0, 3);
 
       -- Course indicator
       --------------------------------------------------------------------------
 
       Gl.Shaders.Load_Matrix (M1);
 
-      Gl.Fonts.Draw (Utility.Strings.Float_Image (Flight.Data.Course, 0),
-                     X,
-                     Y,
-                     Font,
-                     Alignment_CC);
+      if Flight.Data.Is_Recent (Field_Course) then
+
+         Gl.Fonts.Draw (Utility.Strings.Float_Image (Flight.Data.Course, 0),
+                        X,
+                        Y,
+                        Font,
+                        Alignment_CC);
+
+      else
+
+         Gl.Fonts.Draw ("-",
+                        X,
+                        Y,
+                        Font,
+                        Alignment_CC);
+
+      end if;
 
       -- Allocation
       --------------------------------------------------------------------------

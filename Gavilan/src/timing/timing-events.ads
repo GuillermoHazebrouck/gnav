@@ -47,6 +47,16 @@ package Timing.Events is
    procedure Restart (This : in out Timer_Record);
    
    --===========================================================================
+   -- Sets the timer to inactive
+   --===========================================================================
+   procedure Pause (This : in out Timer_Record);
+   
+   --===========================================================================
+   -- Resumes the timer if it was inactive
+   --===========================================================================
+   procedure Resume (This : in out Timer_Record);
+   
+   --===========================================================================
    --
    --===========================================================================
    procedure Register_Timer (Timer : Duration; Callback : Timed_Procedure);
@@ -57,10 +67,20 @@ package Timing.Events is
    function Register_Timer (Timer : Duration; Callback : Timed_Procedure) return access Timer_Record;
    
    --===========================================================================
-   --
+   -- Triggers the timers and advances the count
    --===========================================================================
    procedure Tick;   
-
+   
+   --===========================================================================
+   -- Registers a callback to be trigger on finalization
+   --===========================================================================
+   procedure Register_Finalization (Callback : Timed_Procedure);
+   
+   --===========================================================================
+   -- Finalizes the timer and triggers the finalization
+   --===========================================================================
+   procedure Finalize;
+   
 private
    
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -88,7 +108,9 @@ private
                                                Counter  => 0.0,
                                                Callback => null);
    
-   Timer_Stack : array (1..10) of aliased Timer_Record := (others => No_Timed_Record);
+   Timer_Stack : array (1..15) of aliased Timer_Record := (others => No_Timed_Record);
+   
+   Finalization_Stack : array (1..15) of Timed_Procedure := (others => null);
    
 end Timing.Events;
 --------------------------------------------------------------------------------

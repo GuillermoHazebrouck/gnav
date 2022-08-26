@@ -30,62 +30,127 @@ with Gl.Resources;
 with Gl.Shaders;
 with Maps;
 use  Maps;
+with Utility.Log;
+
 
 --//////////////////////////////////////////////////////////////////////////////
 --
 --//////////////////////////////////////////////////////////////////////////////
 package body Flight is
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   type Dots_Array is array (Dots_Range) of Flight_Data_Record;
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Age (This : Flight_Data_Record; Field : Data_Field_Kind) return Duration is
+   begin
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   type Cluster_Record is record
+      return Cached_Time - This.Ages (Field);
 
-      Active  : Boolean;
+   end Age;
+   -----------------------------------------------------------------------------
 
-      Loaded  : Boolean;
 
-      Dots    : Dots_Array;
 
-      Last    : Dots_Range;
 
-      Line_Id : Gl_Uint;
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Relative_Age (This : Flight_Data_Record; Field : Data_Field_Kind) return Duration is
+   begin
 
-   end record;
+      return This.Timestamp - This.Ages (Field);
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   No_Cluster_Record : constant Cluster_Record := (Active  => False,
-                                                   Loaded  => False,
-                                                   Dots    => (others => No_Flight_Data),
-                                                   Last    => Dots_Range'First,
-                                                   Line_Id => 0);
+   end Relative_Age;
+   -----------------------------------------------------------------------------
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   type Cluster_Array is array (Cluster_Range) of Cluster_Record;
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   History  : Cluster_Array := (others => No_Cluster_Record);
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Current  : Cluster_Range := Cluster_Range'First;
 
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   --
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Previous : Flight_Data_Record := No_Flight_Data;
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Is_Update (This : Flight_Data_Record; Field : Data_Field_Kind) return Boolean is
+   begin
+
+      return This.Origin (Field) /= Origin_None;
+
+   end Is_Update;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Is_Recent (This : Flight_Data_Record; Field : Data_Field_Kind) return Boolean is
+   begin
+
+      return Cached_Time - This.Ages (Field) <= 2.0;
+
+   end Is_Recent;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   procedure Cache_Timestamp (This : in out Flight_Data_Record; Field : Data_Field_Kind) is
+   begin
+
+      This.Ages (Field) := This.Timestamp;
+
+   end Cache_Timestamp;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- Returns the previous index in the circular history buffer
+   --===========================================================================
+   procedure Get_Previous_Index (Index : in out History_Range) is
+   begin
+
+      if Index > History_Range'First then
+
+         Index := Index - 1;
+
+      else
+
+         Index := History_Range'Last;
+
+      end if;
+
+   end Get_Previous_Index;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- Returns the next index in the circular history buffer
+   --===========================================================================
+   procedure Get_Next_Index (Index : in out History_Range) is
+   begin
+
+      if Index < History_Range'Last then
+
+         Index := Index + 1;
+
+      else
+
+         Index := History_Range'First;
+
+      end if;
+
+   end Get_Next_Index;
+   -----------------------------------------------------------------------------
+
+
+
 
    --===========================================================================
    -- (See specification file)
@@ -93,52 +158,13 @@ package body Flight is
    procedure Cache_Data is
    begin
 
-      -- Check if the current cluster is full
-      ------------------------------------------------
+      Previous := History (Current);
 
-      Previous := History (Current).Dots (History (Current).Last);
+      Get_Next_Index (Current);
 
-      if History (Current).Last = Dots_Range'Last then
+      History (Current) := Data;
 
-         if Current = Cluster_Range'Last then
-
-            Current := Cluster_Range'First;
-
-         else
-
-            Current := Current + 1;
-
-         end if;
-
-         -- Rest the next cluster
-         --------------------------------------------
-
-         History (Current).Active := False;
-         History (Current).Last   := Dots_Range'First;
-         History (Current).Dots   := (others => No_Flight_Data);
-
-      end if;
-
-      -- Advance the slot
-      --------------------------------------------
-
-      if History (Current).Active then
-
-         History (Current).Last := History (Current).Last + 1;
-
-      else
-
-         History (Current).Active := True;
-
-      end if;
-
-      -- Load data in the next slot and mark for
-      -- reloading on the GPU
-      --------------------------------------------
-
-      History (Current).Dots (History (Current).Last) := Data;
-
-      History (Current).Loaded := False;
+      On_Data_Cached.Trigger;
 
    end Cache_Data;
    -----------------------------------------------------------------------------
@@ -152,21 +178,15 @@ package body Flight is
    procedure Clear_History is
    begin
 
-   	Current := Cluster_Range'First;
+      Current := History_Range'First;
 
-      for I in Cluster_Range loop
+      History := (others => No_Flight_Data);
 
-         History (I).Active := False;
+      Data     := No_Flight_Data;
 
-         History (I).Loaded := False;
+      Previous := No_Flight_Data;
 
-         History (I).Last   := Dots_Range'First;
-
-         History (I).Dots   := (others => No_Flight_Data);
-
-      end loop;
-
-   	Previous := No_Flight_Data;
+      On_Data_Cleared.Trigger;
 
    end Clear_History;
    -----------------------------------------------------------------------------
@@ -191,67 +211,252 @@ package body Flight is
    --===========================================================================
    -- (See specification file)
    --===========================================================================
-   procedure Draw_Horizontal_Path (View : Map_View_Record) is
-
-      M1 : Gl_Mat_4 := Gl.Shaders.Get_Active_Matrix;
-
-      M2 : Gl_Mat_4 := View.Geographic_Matrix;
-
+   procedure Compute_Wind is
    begin
 
-      Gl.Shaders.Load_Matrix (M2);
+      if Wind_Source = Wind_Source_Computation then
 
-      for C in Cluster_Range loop
+         case Wind_Computation is
 
-         if History (C).Active then
+            when Wind_Computation_Differential =>
 
-            if not History (C).Loaded then
+               if
+                 Data.Is_Update (Field_Airspeed) and
+                 Data.Is_Update (Field_Speed)    and
+                 Data.Is_Update (Field_Course)   and
+                 Data.Is_Update (Field_Heading)
+               then
+
+                  null;
+
+               end if;
+
+            when Wind_Computation_Path_Drift =>
+
+               -- Go back in the history and check if we have turned more than
+               -- 360 deg in (quasi) free motion. Then use homologous
+               -- trajectory points to compute the trayectory drift.
+               --
+               -- NOTE:
+               -- > The turn-rate must remain above a 8 deg/s.
+               -- > The turn-rate must not vary more thant 20%.
+               --
+               -- NOTE:
+               -- > The algorithm is simple and might not always be accurate,
+               --   specially when there are large corrections. The calculation
+               --   will stop if the trajectory is corrected considerably, but
+               --   small corrections might pollute the result inadvertently.
+               -- > The algorithm might not work in strong wind (high path
+               --   curvature expected).
+               -- > In simulations the algorithm seems to work quite well.
+               -- > A better algorithm might be trying to fit a cicloid using
+               --   least squares.
+               --
+               -----------------------------------------------------------------
 
                declare
 
-                  Buffer : Gl_Float_Vec (1..2 * Positive (History (C).Last));
-                  J      : Positive := 1;
+                  H         : History_Range := Current;
+                  J         : Natural    := 0;
+                  N         : Long_Float := 0.0;
+                  Angle     : Long_Float := 0.0;     -- deg
+                  Span      : Duration   := 0.0;     -- s
+                  Deviation : Float      := 0.0;     -- deg
+                  V1, V2    : Vector2_Record;        -- m/s
+                  Min_Turn  : constant Float := 8.0; -- deg/s
 
                begin
 
-                  for D in 1..History (C).Last loop
+                  if
+                    Data.Is_Update (Field_Turn) and
+                    Data.Is_Update (Field_Course)
+                  then
 
-                     Buffer (J) := Gl_Float (History (C).Dots (D).Position.Lon);
-                     J := J + 1;
-                     Buffer (J) := Gl_Float (History (C).Dots (D).Position.Lat);
-                     J := J + 1;
+                     if abs Data.Turn < Min_Turn then
 
-                  end loop;
+                        -- The turn rate is too slow for wind computation
+                        --------------------------------------------------------
 
-                  Gl.Resources.Update_Resource (History (C).Line_Id, Buffer'Unrestricted_Access);
+                        return;
+
+                     end if;
+
+                     V1.Set_From_Polar (Long_Float (Data.Course) / 180.0 * Math.Pi, 1.0);
+
+                     -- Check if the turn has been maintained for the
+                     -- necessary time span to make two complete turns
+                     -----------------------------------------------------------
+
+                     for K in History_Range loop
+
+                        Get_Previous_Index (H);
+
+                        -- Skip data that is not valid
+                        --------------------------------------------------------
+                        if
+                          History (H).Is_Update (Field_Turn)   and
+                          History (H).Is_Update (Field_Course) and
+                          History (H).Turn > Min_Turn
+                        then
+
+                           Deviation := abs ((Data.Turn - History (H).Turn) / Data.Turn);
+
+                           V2.Set_From_Polar (Long_Float (History (H).Course) / 180.0 * Math.Pi, 1.0);
+
+                           Angle := Angle + V1.Angle (V2) * 180.0 / Math.Pi;
+
+                           V1 := V2;
+
+                           Span := Data.Timestamp - History (H).Timestamp;
+
+                           exit when abs Angle > 360.0 or Deviation > 0.2;
+
+                        end if;
+
+                     end loop;
+
+                     if Span > 0.0 and abs Angle > 360.0 and Deviation < 0.2 then
+
+                        Data.Blow := Vector (History (H).Position, Data.Position);
+
+                        Data.Blow.Scale (1000.0 / Long_Float (Span));
+
+                        Data.Ages   (Field_Blow) := Cached_Time;
+
+                        Data.Origin (Field_Blow) := Origin_Internal;
+
+                     end if;
+
+                     -- Take the mean blow during the last 5 minutes
+                     -----------------------------------------------------------
+
+                     if Data.Is_Update (Field_Blow) then
+
+                        H := Current;
+
+                        V1 := Data.Blow;
+
+                        N  := 1.0;
+
+                        for K in History_Range loop
+
+                           Get_Previous_Index (H);
+
+                           -- Skip data that is not valid
+                           -----------------------------------------------------
+                           if History (H).Is_Update (Field_Blow) then
+
+                              V1 := V1 + History (H).Blow;
+
+                              N  := N + 1.0;
+
+                              Span := Data.Timestamp - History (H).Timestamp;
+
+                              exit when Span > 300.0;
+
+                           end if;
+
+                        end loop;
+
+                        if N > 0.0 then
+
+                           Data.Wind := V1;
+
+                           Data.Wind.Scale (1.0 / N);
+
+                           Data.Ages   (Field_Wind) := Cached_Time;
+
+                           Data.Origin (Field_Wind) := Origin_Internal;
+
+                        end if;
+
+                     end if;
+
+                  end if;
 
                end;
 
-               History (C).Loaded := True;
+            when others =>
+
+               null;
+
+         end case;
+
+      end if;
+
+   end Compute_Wind;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   procedure Compute_Course is
+   begin
+
+      null;
+
+   end Compute_Course;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   procedure Compute_Turn_Rate is
+
+      H      : History_Range := Current;
+      Angle  : Float    := 0.0;
+      Span   : Duration := 0.0;
+      V1, V2 : Vector2_Record;
+
+   begin
+
+      -- The turn is computed as the mean course variation during the last 5s
+      --------------------------------------------------------------------------
+
+      if Data.Is_Update (Field_Course) and not Data.Is_Update (Field_Turn) then
+
+         V1.Set_From_Polar (Long_Float (Data.Course) / 180.0 * Math.Pi, 1.0);
+
+         for K in History_Range loop
+
+            Get_Previous_Index (H);
+
+            if History (H).Is_Update (Field_Course) then
+
+               exit when Cached_Time - History (H).Timestamp > 5.0;
+
+               V2.Set_From_Polar (Long_Float (History (H).Course) / 180.0 * Math.Pi, 1.0);
+
+               Angle := Angle + Float (V1.Angle (V2) * 180.0 / Math.Pi);
+
+               V1 := V2;
+
+               Span := Data.Timestamp - History (H).Timestamp;
 
             end if;
 
-            Gl.Bind_Buffer (GL_ARRAY_BUFFER, History (C).Line_Id);
+         end loop;
 
-            Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
+         if Span > 0.0 then
 
-            Gl.Shaders.Bind_Shader (Gl.Shaders.Lines_2D);
+            Data.Turn := Angle / Float (Span);
 
-            Gl.Shaders.Load_Width (2.0);
+            Data.Ages   (Field_Turn) := Cached_Time;
 
-            Gl.Shaders.Load_Color (0.2, 0.2, 0.2, 1.0);
-
-            Gl.Draw_Arrays (GL_LINE_STRIP, 0, Gl_Sizei (History (C).Last));
+            Data.Origin (Field_Turn) := Origin_Internal;
 
          end if;
 
-      end loop;
+      end if;
 
-      Gl.Shaders.Load_Matrix (M1);
-
-   end Draw_Horizontal_Path;
+   end Compute_Turn_Rate;
    -----------------------------------------------------------------------------
-
 
 end Flight;
 --------------------------------------------------------------------------------

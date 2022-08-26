@@ -28,11 +28,11 @@ with Ada.Text_IO;
 -- Gnav
 with Display.Compass;
 with Display.Flight_Panel;
-with Display.Route;
 with Flight;
 with Flight.Aircraft;
 with Flight.Plan;
-with Flight.Simu;
+with Flight.Representation;
+with Flight.Stream;
 with Gl.Fonts;
 with Math.Vector2;
 with Maps;
@@ -332,10 +332,26 @@ package body Display.Pages.Navigation is
       
       Btn_Up.Set_Font_Size (0.5, 0.4);
                              
-      -- Right button
+      -- Left button
       ------------------------------------------------------
       
       Allocation.X := Allocation.X - 0.2 - 0.5 * W;      
+      Allocation.Y := 0.5 - 0.5 * H;
+               
+      Btn_Left.Set_Label ("W");
+      
+      Btn_Left.Set_Allocation (Allocation);
+      
+      Btn_Left.Set_Label_Color (Color_White);
+      
+      Btn_Left.Set_Transparency (0.3);
+      
+      Btn_Left.Set_Font_Size (0.5, 0.4);
+                        
+      -- Right button
+      ------------------------------------------------------
+      
+      Allocation.X := Allocation.X + 0.4 + W;      
       Allocation.Y := 0.5 - 0.5 * H;
       
       Btn_Right.Set_Label ("E");
@@ -347,23 +363,7 @@ package body Display.Pages.Navigation is
       Btn_Right.Set_Transparency (0.3);
       
       Btn_Right.Set_Font_Size (0.5, 0.4);
-                                  
-      -- Left button
-      ------------------------------------------------------
-      
-      Allocation.X := Allocation.X + 0.4 + W;      
-      Allocation.Y := 0.5 - 0.5 * H;
-      
-      Btn_Left.Set_Label ("W");
-      
-      Btn_Left.Set_Allocation (Allocation);
-      
-      Btn_Left.Set_Label_Color (Color_White);
-      
-      Btn_Left.Set_Transparency (0.3);
-      
-      Btn_Left.Set_Font_Size (0.5, 0.4);
-            
+             
       -- Zoom out button
       ------------------------------------------------------   
       
@@ -437,13 +437,7 @@ package body Display.Pages.Navigation is
       
       -- Terrain data
       ------------------------------------------------------
-      
-      if not Flight.Simu.Is_Active then
-        
-         Maps.Loader.Load_Default_Dataset;
-         
-      end if;
-            
+     
       if Edit_Mode then
                
          Allocation.X := M;      
@@ -503,7 +497,7 @@ package body Display.Pages.Navigation is
       -- Route
       --------------------------------------------------------------------------
       
-      Display.Route.Init;
+      Flight.Representation.Init;
       
       -- View update
       --------------------------------------------------------------------------
@@ -520,7 +514,7 @@ package body Display.Pages.Navigation is
    --===========================================================================
    --
    --===========================================================================
-   procedure Draw (Width, Height : Float) is
+   procedure Draw is
       
       use Utility.Strings;
       
@@ -541,7 +535,7 @@ package body Display.Pages.Navigation is
       
       Maps.Layers.Draw (View);
       
-      Flight.Draw_Horizontal_Path (View);
+      --Flight.Draw_Horizontal_Path (View);
       
       if Edit_Mode then
          
@@ -553,10 +547,10 @@ package body Display.Pages.Navigation is
       
       end if;
       
-      -- Route
+      -- Flight representation
       --------------------------------
       
-      Display.Route.Draw (View);
+      Flight.Representation.Draw (View);
       
       -- Flight data
       --------------------------------

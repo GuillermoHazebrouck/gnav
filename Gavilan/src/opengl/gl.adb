@@ -20,12 +20,12 @@
 
 -- Depencencies
 --//////////////////////////////////////////////////////////////////////////////
-
 -- Standard
 with Ada.Numerics.Generic_Elementary_Functions;
-with Ada.Text_IO;
 with Ada.Unchecked_Conversion;
 with Ada.Environment_Variables;
+-- Gnav
+with Utility.Log;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -194,14 +194,14 @@ package body Gl is
    begin
       for I in 0..3 loop
 
-         Ada.Text_IO.Put      (Float'Image (Matrix (I * 4 + 1)));
-         Ada.Text_IO.Put      (Float'Image (Matrix (I * 4 + 2)));
-         Ada.Text_IO.Put      (Float'Image (Matrix (I * 4 + 3)));
-         Ada.Text_IO.Put_Line (Float'Image (Matrix (I * 4 + 4)));
+         Utility.Log.Put_Message      (Float'Image (Matrix (I * 4 + 1)));
+         Utility.Log.Put_Message      (Float'Image (Matrix (I * 4 + 2)));
+         Utility.Log.Put_Message      (Float'Image (Matrix (I * 4 + 3)));
+         Utility.Log.Put_Message      (Float'Image (Matrix (I * 4 + 4)));
 
       end loop;
 
-      Ada.Text_IO.Put_Line ("");
+      Utility.Log.Put_Message ("");
 
    end Dump;
    -----------------------------------------------------------------------------
@@ -317,9 +317,9 @@ package body Gl is
    -- (See specification file)
    --===========================================================================
    procedure Log_Trace (Message : String) is
-
    begin
-      Ada.Text_IO.Put_Line ("OpenGL " & Message);
+
+      Utility.Log.Put_Message ("OpenGL " & Message);
 
    end Log_Trace;
    -----------------------------------------------------------------------------
@@ -332,7 +332,6 @@ package body Gl is
    --===========================================================================
    procedure Log_Error (Message : String := "") is
 
-      use Ada.Text_IO;
       Er : Gl_Enum;
       I : Integer := 1;
 
@@ -344,15 +343,15 @@ package body Gl is
 
       while Er /= GL_NO_ERROR loop
 
-         Put_Line ("error (" & Integer'Image (I) & "):" & Gl_Enum'Image (Er));
+         Utility.Log.Put_Message ("error (" & Integer'Image (I) & "):" & Gl_Enum'Image (Er));
 
          case Er is
-            when GL_INVALID_VALUE     => Put_Line (" (GL_INVALID_VALUE)");
-            when GL_INVALID_ENUM      => Put_Line (" (Gl_INVALID_ENUM)");
-            when GL_INVALID_OPERATION => Put_Line (" (GL_INVALID_OPERATION)");
-            when GL_STACK_OVERFLOW    => Put_Line (" (GL_STACK_OVERFLOW)");
-            when GL_STACK_UNDERFLOW   => Put_Line (" (GL_STACK_UNDERFLOW)");
-            when GL_OUT_OF_MEMORY     => Put_Line (" (GL_OUT_OF_MEMORY)");
+            when GL_INVALID_VALUE     => Utility.Log.Put_Message (" (GL_INVALID_VALUE)");
+            when GL_INVALID_ENUM      => Utility.Log.Put_Message (" (Gl_INVALID_ENUM)");
+            when GL_INVALID_OPERATION => Utility.Log.Put_Message (" (GL_INVALID_OPERATION)");
+            when GL_STACK_OVERFLOW    => Utility.Log.Put_Message (" (GL_STACK_OVERFLOW)");
+            when GL_STACK_UNDERFLOW   => Utility.Log.Put_Message (" (GL_STACK_UNDERFLOW)");
+            when GL_OUT_OF_MEMORY     => Utility.Log.Put_Message (" (GL_OUT_OF_MEMORY)");
             when others => null;
          end case;
 
@@ -371,34 +370,34 @@ package body Gl is
    --===========================================================================
    -- Trace error callback
    --===========================================================================
-   procedure Error_Callback (source    : Gl_Enum;
-                             gl_type   : Gl_Enum;
-                             id        : Gl_Uint;
-                             severity  : Gl_Enum;
-                             length    : Gl_Sizei;
-                             message   : Gl_Ubyte_Ptr;
-                             userParam : System.Address);
+   procedure Error_Callback (Source    : Gl_Enum;
+                             Gl_Type   : Gl_Enum;
+                             Id        : Gl_Uint;
+                             Severity  : Gl_Enum;
+                             Length    : Gl_Sizei;
+                             Message   : Gl_Ubyte_Ptr;
+                             Userparam : System.Address);
    pragma Convention (C, Error_Callback);
 
-   procedure Error_Callback (source    : Gl_Enum;
-                             gl_type   : Gl_Enum;
-                             id        : Gl_Uint;
-                             severity  : Gl_Enum;
-                             length    : Gl_Sizei;
-                             message   : Gl_Ubyte_Ptr;
-                             userParam : System.Address) is
+   procedure Error_Callback (Source    : Gl_Enum;
+                             Gl_Type   : Gl_Enum;
+                             Id        : Gl_Uint;
+                             Severity  : Gl_Enum;
+                             Length    : Gl_Sizei;
+                             Message   : Gl_Ubyte_Ptr;
+                             Userparam : System.Address) is
 
    begin
-      if gl_type = GL_DEBUG_TYPE_ERROR then
 
-         Ada.Text_IO.Put_Line ("** GL_ERROR ** : " &
-         Interfaces.C.Strings.Value (To_Chars_Ptr (message)));
+      if Gl_Type = GL_DEBUG_TYPE_ERROR then
+
+         Utility.Log.Put_Message ("GL error:" & Interfaces.C.Strings.Value (To_Chars_Ptr (message)));
 
       end if;
 
    exception
       when E : others =>
-         Ada.Text_IO.Put_Line ("when handling GL error callback");
+         Utility.Log.Put_Message (E, "when handling GL error callback");
 
    end Error_Callback;
    -----------------------------------------------------------------------------
@@ -413,6 +412,7 @@ package body Gl is
    begin
 
       if Enable then
+
          Gl.Log_Trace ("enabling debug output");
 
          Gl.Enable (GL_DEBUG_OUTPUT);
@@ -426,6 +426,7 @@ package body Gl is
          Log_Via_Callback := True;
 
       else
+
          Log_Via_Callback := False;
 
          Gl.Log_Trace ("disabling debug output");
@@ -437,19 +438,6 @@ package body Gl is
       end if;
 
    end Trace_Errors;
-   -----------------------------------------------------------------------------
-
-
-
-
-   --===========================================================================
-   -- Sets a message for the error log
-   --===========================================================================
-   procedure Set_Message (Message : String) is
-   begin
-      Ada.Text_IO.Put_Line (Message);
-
-   end Set_Message;
    -----------------------------------------------------------------------------
 
 begin

@@ -31,6 +31,7 @@ with Ada.Text_IO;
 -- Gnav
 with Gl.Resources;
 with Gl.Shaders;
+with Utility.Log;
 with Utility.Streams;
 use  Utility.Streams;
 with Utility.Strings;
@@ -75,7 +76,7 @@ package body Maps.Layers is
 
       when others =>
 
-         Ada.Text_IO.Put_Line ("unable to load resources for layer part");
+         Utility.Log.Put_Message ("unable to load resources for layer part");
 
    end Load_Resources;
    -----------------------------------------------------------------------------
@@ -162,7 +163,7 @@ package body Maps.Layers is
 
          Integer'Read (Source, Parts (I));
 
-         -- Ada.Text_IO.Put_Line ("part at" & Integer'Image (Parts (I)));
+         -- Utility.Log.Put_Message ("part at" & Integer'Image (Parts (I)));
 
       end loop;
 
@@ -174,11 +175,11 @@ package body Maps.Layers is
 
       end loop;
 
-      -- Ada.Text_IO.Put_Line ("loading layer");
+      -- Utility.Log.Put_Message ("loading layer");
 
-      -- Ada.Text_IO.Put_Line (Image (Points (Points'First)));
+      -- Utility.Log.Put_Message (Image (Points (Points'First)));
 
-      -- Ada.Text_IO.Put_Line (Image (Points (Points'Last)));
+      -- Utility.Log.Put_Message (Image (Points (Points'Last)));
 
       for I in 1..Parts_Count loop
 
@@ -202,9 +203,7 @@ package body Maps.Layers is
 
       when E : others =>
 
-         Ada.Text_IO.Put_Line ("error while reading shape parts");
-
-         Ada.Text_IO.Put_Line (Ada.Exceptions.Exception_Message (E));
+         Utility.Log.Put_Message (E, "error while reading shape parts");
 
    end Load_Geometry;
    -----------------------------------------------------------------------------
@@ -257,7 +256,7 @@ package body Maps.Layers is
 
    begin
 
-      Ada.Text_IO.Put_Line ("reading shape file: " & Path);
+      Utility.Log.Put_Message ("reading shape file: " & Path);
 
       Layers.Add_Item (Layer);
 
@@ -315,7 +314,7 @@ package body Maps.Layers is
 
       if Ident /= 9994 then
 
-         Ada.Text_IO.Put_Line ("shape file code not found" & Stream_Element_Offset'Image (Last));
+         Utility.Log.Put_Message ("shape file code not found" & Stream_Element_Offset'Image (Last));
 
          goto Close_And_Leave;
 
@@ -329,7 +328,7 @@ package body Maps.Layers is
 
       if Version /= 1000 then
 
-         Ada.Text_IO.Put_Line ("shape file version not supported");
+         Utility.Log.Put_Message ("shape file version not supported");
 
          goto Close_And_Leave;
 
@@ -337,7 +336,7 @@ package body Maps.Layers is
 
       Integer'Read (Source, Shape);
 
-      Ada.Text_IO.Put_Line ("shape type:" & Integer'Image (Shape));
+      Utility.Log.Put_Message ("shape type:" & Integer'Image (Shape));
 
       if Shape = 3 then
 
@@ -349,7 +348,7 @@ package body Maps.Layers is
 
       else
 
-         Ada.Text_IO.Put_Line ("shaper type not supported");
+         Utility.Log.Put_Message ("shaper type not supported");
 
          goto Close_And_Leave;
 
@@ -363,9 +362,9 @@ package body Maps.Layers is
 
       Long_Float'Read (Source, UR.Lat);
 
-      Ada.Text_IO.Put_Line ("Bottom-Left:" & Image (BL));
+      Utility.Log.Put_Message ("Bottom-Left:" & Image (BL));
 
-      Ada.Text_IO.Put_Line ("Upper-Right:" & Image (UR));
+      Utility.Log.Put_Message ("Upper-Right:" & Image (UR));
 
       Stream.Move_Cursor (101);
 
@@ -406,7 +405,7 @@ package body Maps.Layers is
 
       end loop;
 
-      Ada.Text_IO.Put_Line ("loaded parts:" & Natural'Image (Layer.Parts.Get_Count));
+      Utility.Log.Put_Message ("loaded parts:" & Natural'Image (Layer.Parts.Get_Count));
 
       <<Close_And_Leave>>
 
@@ -415,9 +414,7 @@ package body Maps.Layers is
    exception
       when E : others =>
 
-         Ada.Text_IO.Put_Line ("error while reading shape file '" & Name & "'");
-
-         Ada.Text_IO.Put_Line (Ada.Exceptions.Exception_Message (E));
+         Utility.Log.Put_Message (E, "error while reading shape file '" & Name & "'");
 
          if Is_Open (File_Id) then
             Close (File_Id);
@@ -440,7 +437,7 @@ package body Maps.Layers is
 
       Layers.Clear;
 
-      Search (Directory =>-Database_Path,
+      Search (Directory =>-Dataset_Path,
               Pattern   => "*.shp",
               Process   => Process_Shape_File'Access);
 
@@ -481,21 +478,23 @@ package body Maps.Layers is
 
       while Layer /= null loop
 
-         Part := Layer.Parts.Get_First_Item;
+         if Visible (Layer.Kind) then
 
-         if Layer.Glow then
+            Part := Layer.Parts.Get_First_Item;
 
-            while Part /= null loop
+            if Layer.Glow then
 
-               Gl.Bind_Buffer (GL_ARRAY_BUFFER, Part.Id);
+               while Part /= null loop
 
-               Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
+                  Gl.Bind_Buffer (GL_ARRAY_BUFFER, Part.Id);
 
-               Gl.Shaders.Load_Color (1.0,1.0,1.0,1.0);
+                  Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
 
-               Gl.Shaders.Load_Width (3.5, 0.8);
+                  Gl.Shaders.Load_Color (1.0,1.0,1.0,1.0);
 
-               case Layer.Form is
+                  Gl.Shaders.Load_Width (3.5, 0.8);
+
+                  case Layer.Form is
 
                   when Form_Polyline =>
 
@@ -523,28 +522,28 @@ package body Maps.Layers is
 
                      Gl.Draw_Arrays (GL_LINE_LOOP, 0, Part.Size);
 
-               end case;
+                  end case;
 
-               Layer.Parts.Get_Next_Item (Part);
+                  Layer.Parts.Get_Next_Item (Part);
 
-            end loop;
+               end loop;
 
-         else
+            else
 
-            Gl.Shaders.Load_Width (1.0);
+               Gl.Shaders.Load_Width (1.0);
 
-            Gl.Shaders.Load_Color (Layer.Color.R,
-                                   Layer.Color.G,
-                                   Layer.Color.B,
-                                   Layer.Color.A);
+               Gl.Shaders.Load_Color (Layer.Color.R,
+                                      Layer.Color.G,
+                                      Layer.Color.B,
+                                      Layer.Color.A);
 
-            while Part /= null loop
+               while Part /= null loop
 
-               Gl.Bind_Buffer (GL_ARRAY_BUFFER, Part.Id);
+                  Gl.Bind_Buffer (GL_ARRAY_BUFFER, Part.Id);
 
-               Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
+                  Gl.Vertex_Attrib_Pointer (0, 2, GL_TYPE_FLOAT, GL_FALSE, 0);
 
-               case Layer.Form is
+                  case Layer.Form is
 
                   when Form_Polyline =>
 
@@ -554,11 +553,13 @@ package body Maps.Layers is
 
                      Gl.Draw_Arrays (GL_LINE_LOOP, 0, Part.Size);
 
-               end case;
+                  end case;
 
-               Layer.Parts.Get_Next_Item (Part);
+                  Layer.Parts.Get_Next_Item (Part);
 
-            end loop;
+               end loop;
+
+            end if;
 
          end if;
 

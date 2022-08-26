@@ -31,6 +31,7 @@ with Display.Pages.Navigation;
 with Display.Pages.Route_Edition;
 with Display.Pages.Strips;
 with Display.Pages.System;
+with Display.Pages.Wind;
 with Flight.Aircraft;
 with Flight.Plan;
 with Gl.Fonts;
@@ -51,6 +52,7 @@ package body Display.Menu is
                        Page_Route_Edition, 
                        Page_Glider, 
                        Page_Map, 
+                       Page_Wind,
                        Page_Check_List, 
                        Page_System);
    
@@ -97,6 +99,8 @@ package body Display.Menu is
    
    Btn_Map_Options   : Button_Record;
      
+   Btn_Wind          : Button_Record;
+     
    Btn_System        : Button_Record;
       
    Btn_Exit          : Button_Record;
@@ -124,7 +128,7 @@ package body Display.Menu is
         
       -- Flight plan page button
       ------------------------------------------------------
-      Btn_Strips.Set_Label ("STRIP");
+      Btn_Strips.Set_Label ("WAYPOINT");
       
       Btn_Strips.Set_Allocation (Allocation);
       
@@ -133,7 +137,7 @@ package body Display.Menu is
       Btn_Strips.Set_Label_Color (Fore => Color_White,
                                       Glow => Color_Black);
       
-      Btn_Strips.Set_Font_Size (0.3, 0.3);
+      Btn_Strips.Set_Font_Size (0.3, 0.28);
               
       -- Route editor page button
       ------------------------------------------------------
@@ -152,7 +156,7 @@ package body Display.Menu is
       
       -- Glider page button
       ------------------------------------------------------
-      Btn_Glider.Set_Label ("GLIDER");
+      Btn_Glider.Set_Label ("WEIGHT");
       
       Allocation.Y := Allocation.Y - H - M;
       
@@ -165,20 +169,35 @@ package body Display.Menu is
       
       Btn_Glider.Set_Font_Size (0.3, 0.3);
                  
-      -- Checklist page button
+      -- Map configuration page button
       ------------------------------------------------------
-      Btn_Map_Options.Set_Label ("MAP");
+      --Btn_Map_Options.Set_Label ("MAP");
+      
+      --Allocation.Y := Allocation.Y - H - M;
+      
+      --Btn_Map_Options.Set_Allocation (Allocation);
+            
+      --Btn_Map_Options.Set_Background_Color (Color_Black.With_Alpha (0.5));
+      
+      --Btn_Map_Options.Set_Label_Color (Fore => Color_White,
+      --                                 Glow => Color_Black);
+      
+      --Btn_Map_Options.Set_Font_Size (0.3, 0.3);
+                    
+      -- Wind info button
+      ------------------------------------------------------
+      Btn_Wind.Set_Label ("WIND");
       
       Allocation.Y := Allocation.Y - H - M;
       
-      Btn_Map_Options.Set_Allocation (Allocation);
+      Btn_Wind.Set_Allocation (Allocation);
             
-      Btn_Map_Options.Set_Background_Color (Color_Black.With_Alpha (0.5));
+      Btn_Wind.Set_Background_Color (Color_Black.With_Alpha (0.5));
       
-      Btn_Map_Options.Set_Label_Color (Fore => Color_White,
-                                       Glow => Color_Black);
+      Btn_Wind.Set_Label_Color (Fore => Color_White,
+                                Glow => Color_Black);
       
-      Btn_Map_Options.Set_Font_Size (0.3, 0.3);
+      Btn_Wind.Set_Font_Size (0.3, 0.3);
                    
       -- Checklist page button
       ------------------------------------------------------
@@ -240,7 +259,9 @@ package body Display.Menu is
       
       Display.Pages.Glider.Init;
       
-      Display.Pages.Map.Init;
+      --Display.Pages.Map.Init;
+      
+      Display.Pages.Wind.Init;
       
       Display.Pages.Check_List.Init;
       
@@ -255,7 +276,7 @@ package body Display.Menu is
    --===========================================================================
    -- (See specifications file)
    --===========================================================================
-   procedure Draw (Width, Height : Float) is      
+   procedure Draw is      
    begin
       
       -- Draw the active page under the menu
@@ -265,7 +286,7 @@ package body Display.Menu is
             
          when Page_Navigation =>
                  
-            Display.Pages.Navigation.Draw (Width, Height);
+            Display.Pages.Navigation.Draw;
             
             Btn_Strips.Draw;
             
@@ -273,7 +294,9 @@ package body Display.Menu is
             
             Btn_Glider.Draw;
             
-            Btn_Map_Options.Draw;
+            Btn_Wind.Draw;
+         
+            --Btn_Map_Options.Draw;
          
             Btn_Check_List.Draw;
          
@@ -281,37 +304,43 @@ package body Display.Menu is
          
          when Page_Route_Edition =>
             
-            Display.Pages.Route_Edition.Draw (Width, Height);
+            Display.Pages.Route_Edition.Draw;
          
             Btn_Exit.Draw;
               
          when Page_Strips =>
             
-            Display.Pages.Strips.Draw (Width, Height);
+            Display.Pages.Strips.Draw;
             
             Btn_Exit.Draw;
                 
          when Page_Glider =>
             
-            Display.Pages.Glider.Draw (Width, Height);
+            Display.Pages.Glider.Draw;
       
             Btn_Exit.Draw;
                   
          when Page_Map =>
             
-            Display.Pages.Map.Draw (Width, Height);
+            Display.Pages.Map.Draw;
+      
+            Btn_Exit.Draw;
+                
+         when Page_Wind =>
+            
+            Display.Pages.Wind.Draw;
       
             Btn_Exit.Draw;
               
          when Page_Check_List =>
             
-            Display.Pages.Check_List.Draw (Width, Height);
+            Display.Pages.Check_List.Draw;
             
             Btn_Exit.Draw;
                 
          when Page_System =>
               
-            Display.Pages.System.Draw (Width, Height);
+            Display.Pages.System.Draw;
             
             Btn_Exit.Draw;
               
@@ -361,9 +390,17 @@ package body Display.Menu is
          
             return;
         
-         elsif Btn_Map_Options.Contains (X, Y) then
+         --elsif Btn_Map_Options.Contains (X, Y) then
          
-            Active_Page := Page_Map;
+         --   Active_Page := Page_Map;
+        
+         --   Display.Refresh := True;
+         
+         --   return;
+        
+         elsif Btn_Wind.Contains (X, Y) then
+         
+            Active_Page := Page_Wind;
         
             Display.Refresh := True;
          
@@ -430,6 +467,10 @@ package body Display.Menu is
          when Page_Map =>
             
             Display.Pages.Map.Screen_Pressed (X, Y);
+            
+         when Page_Wind =>
+            
+            Display.Pages.Wind.Screen_Pressed (X, Y);
             
          when Page_System =>
             

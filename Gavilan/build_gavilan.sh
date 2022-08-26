@@ -1,5 +1,19 @@
-#cd src
-#gnatmake -D ../obj/ -aIutility -aIopengl -aIglfw -aIdisplay -aIwidgets -aImaps -lm -lx11 -lGL -lglfw gavilan.adb
+# Make sure there is a folder where to dump the objects
+#------------------------------------------------------
+if [ ! -d "obj" ]; then
+    mkdir obj
+fi
 
-gnatmake -P gavilan.gpr
-mv obj/gavilan bin/gavilan
+# Compile and link the executable
+#------------------------------------------------------
+cd src
+gnatmake gavilan.adb -aIopengl -aIglfw -aItiming -aIstacks -aImath -aIutility -aImaps -aIflight -aIdisplay -Idisplay/pages -aIwidgets  -D ../obj/ -largs -lGL -lglfw
+
+# Copy executable to bin folder
+#------------------------------------------------------
+if [ -f "gavilan" ]; then
+    mv gavilan ../bin/gavilan
+    echo "done!"
+else
+    echo "compilation failed"
+fi

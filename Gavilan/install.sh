@@ -2,9 +2,9 @@
 # GAVILAN INSTALLATION SCRIPT
 #
 # Function: this scrip installs the Gavilan program and default
-#           data. Gavilan must be located in the /home/pi/Gavilan
+#           data. Gavilan must be located in the /home/pi/gnav/Gavilan
 #           folder to work.
-#           The script will install all dependencies (OpenGL and GLGW) 
+#           The script will install all dependencies (OpenGL and GLFW) 
 #           and compile the source code. Then it will apply the necessary 
 #           desktop configuration to launch the program at startup in full
 #           scren mode, with the front panel active and the ability to
@@ -29,30 +29,22 @@ sudo apt-get install libglfw3
 sudo apt-get install libglfw3-dev
 
 # 2. Get GNU Ada compiler
-# Note: version 7 is used since it supports gnatmake -P
 #-------------------------------------------------------------------
-sudo apt-get install gnat-7
+sudo apt-get install gnat
 
-# 3. Unpack custom Mesa library to opt/mesa
-# NOTE: this is only necessary to fix a bug in the geometry shaders
-#       in the Mesa package that comes with Pi-OS
-#-------------------------------------------------------------------
-sudo mv ../etc/mesa-armhf-20201107.tar.gz /
-sudo tar xfz /mesa-armhf-20201107.tar.gz
-sudo rm /mesa-armhf-20201107.tar.gz
-
-# 4. Build source code
+# 3. Build source code (and clean up objects)
 #-------------------------------------------------------------------
 chmod +x build_gavilan.sh
 ./build_gavilan.sh
+rm -fr obj
 
-# 5. Install the evdev package for the front panel
+# 4. Install the evdev package for the front panel
 # (this is a pyton deamon that translates inputs in keyboard entries)
 # Alternative method: sudo apt-get install python-evdev
 #-------------------------------------------------------------------
 sudo pip install evdev
 
-# 6. Load the window configuration for openbox
+# 5. Load the window configuration for openbox
 # NOTE: this will replace the local script and might affect the 
 #       default desktop (which is usless for the soaring computer).
 # Details:
@@ -78,11 +70,17 @@ sudo pip install evdev
 # > To check the exact config file read by openbox, run:
 #   $ ps ax | grep openbox
 #-------------------------------------------------------------------
-cp ../etc/lxde-pi-rc.xml ~/.config/openbox/lxde-pi-rc.xml
-
-# 7. Install the automatic launch scrip (to be executed on LXDE startup)
+if [ "$1" != "DEVEL" ]
+then
+    cp etc/lxde-pi-rc.xml ~/.config/openbox/lxde-pi-rc.xml
+fi;
+    
+# 6. Install the automatic launch scrip (to be executed on LXDE startup)
 # NOTE: this will cause Gavilan to automatically launch at startup and
 #       to shut down the whole system when pressing the "power off" button.
 #-------------------------------------------------------------------
-chmod +x ../etc/autostart
-cp ../etc/autostart ~/.config/lxsession/LXDE-pi/
+if [ "$1" != "DEVEL" ]
+then
+    chmod +x etc/autostart
+    cp etc/autostart ~/.config/lxsession/LXDE-pi/
+fi;

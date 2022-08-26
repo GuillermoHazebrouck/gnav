@@ -24,7 +24,7 @@
 -- Gnav
 with Flight;
 with Flight.Plan;
-with Display.Route;
+with Flight.Representation;
 with Math.Vector2;
 use  Math.Vector2;
 with Maps;
@@ -627,7 +627,7 @@ package body Display.Pages.Route_Edition is
    --===========================================================================
    -- (See specification file)
    --===========================================================================
-   procedure Draw (Width, Height : Float) is
+   procedure Draw is
    begin
 
       View.Height := Height;
@@ -641,7 +641,7 @@ package body Display.Pages.Route_Edition is
 
       Maps.Layers.Draw (View);
 
-      Display.Route.Draw (View);
+      Flight.Representation.Draw (View);
 
       -- Route adaptation
 
@@ -835,6 +835,8 @@ package body Display.Pages.Route_Edition is
 
          end;
 
+         Flight.Plan.Next_Waypoint.Elevation := Maps.Terrain.Get_Elevation (Flight.Plan.Next_Waypoint.Position);
+
          Flight_Plan.Recompute_Tasks;
 
          Flight.Plan.Modified := True;
@@ -854,6 +856,8 @@ package body Display.Pages.Route_Edition is
             Flight.Plan.Next_Waypoint.Position := Maps.Position (Flight.Plan.Next_Waypoint.Position, Step_Vector);
 
          end;
+
+         Flight.Plan.Next_Waypoint.Elevation := Maps.Terrain.Get_Elevation (Flight.Plan.Next_Waypoint.Position);
 
          Flight_Plan.Recompute_Tasks;
 
@@ -875,6 +879,8 @@ package body Display.Pages.Route_Edition is
 
          end;
 
+         Flight.Plan.Next_Waypoint.Elevation := Maps.Terrain.Get_Elevation (Flight.Plan.Next_Waypoint.Position);
+
          Flight_Plan.Recompute_Tasks;
 
          Flight.Plan.Modified := True;
@@ -894,6 +900,8 @@ package body Display.Pages.Route_Edition is
             Flight.Plan.Next_Waypoint.Position := Maps.Position (Flight.Plan.Next_Waypoint.Position, Step_Vector);
 
          end;
+
+         Flight.Plan.Next_Waypoint.Elevation := Maps.Terrain.Get_Elevation (Flight.Plan.Next_Waypoint.Position);
 
          Flight_Plan.Recompute_Tasks;
 

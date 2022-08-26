@@ -34,7 +34,7 @@ package Display.Menu is
    --===========================================================================
    -- Draws the menu and the current page
    --===========================================================================
-   procedure Draw (Width, Height : Float);
+   procedure Draw;
 
    --===========================================================================
    -- Handles a screen (or mouse) press

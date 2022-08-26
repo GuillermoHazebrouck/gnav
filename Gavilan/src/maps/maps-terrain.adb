@@ -32,8 +32,9 @@ with Gl;
 use  Gl;
 with Gl.Resources;
 with Gl.Shaders;
-with Utility.Strings;
 with Utility.Colors;
+with Utility.Log;
+with Utility.Strings;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -161,7 +162,7 @@ package body Maps.Terrain is
    procedure Clear_Grid is
    begin
 
-      Ada.Text_IO.Put_Line ("clearing the terrain grid");
+      Utility.Log.Put_Message ("clearing the terrain grid");
 
       N         := 0;
 
@@ -186,7 +187,7 @@ package body Maps.Terrain is
       use  Utility.Strings;
    begin
 
-      return -Database_Path & "terrain.bin";
+      return -Dataset_Path & "terrain.bin";
 
    end Bin_File_Name;
    -----------------------------------------------------------------------------
@@ -201,7 +202,7 @@ package body Maps.Terrain is
       use  Utility.Strings;
    begin
 
-      return -Database_Path & "terrain.asc";
+      return -Dataset_Path & "terrain.asc";
 
    end Dat_File_Name;
    -----------------------------------------------------------------------------
@@ -251,7 +252,7 @@ package body Maps.Terrain is
 
       when others =>
 
-         Ada.Text_IO.Put_Line ("error when modifying altitude");
+         Utility.Log.Put_Message ("error when modifying altitude");
 
    end Modify_Altitude;
    -----------------------------------------------------------------------------
@@ -274,7 +275,7 @@ package body Maps.Terrain is
 
    begin
 
-      Ada.Text_IO.Put_Line ("computing terrain shadows...");
+      Utility.Log.Put_Message ("computing terrain shadows...");
 
       for I in 2..M-1 loop
 
@@ -323,7 +324,7 @@ package body Maps.Terrain is
 
    begin
 
-      Ada.Text_IO.Put_Line ("reading terrain");
+      Utility.Log.Put_Message ("reading terrain");
 
       if Ada.Directories.Exists (Bin_File_Name) then
 
@@ -333,19 +334,19 @@ package body Maps.Terrain is
 
          Load_Esri_Grid_File;
 
-         Ada.Text_IO.Put_Line ("saving binary terrain format");
+         Utility.Log.Put_Message ("saving binary terrain format");
 
          Save_Binary;
 
       else
 
-         Ada.Text_IO.Put_Line ("no terrain data available");
+         Utility.Log.Put_Message ("no terrain data available");
 
       end if;
 
-      Ada.Text_IO.Put_Line ("terrain buffer size:  " & Float_Image (Float (Terrain'Length * Terrain_Data_Record'Size) / 8_000_000.0, 0) & "MiB");
+      Utility.Log.Put_Message ("terrain buffer size:  " & Float_Image (Float (Terrain'Length * Terrain_Data_Record'Size) / 8_000_000.0, 0) & "MiB");
 
-      Ada.Text_IO.Put_Line ("terrain buffer usage: " & Float_Image (Float (N * M) / Float (Terrain'Length) * 100.0, 0) & "%");
+      Utility.Log.Put_Message ("terrain buffer usage: " & Float_Image (Float (N * M) / Float (Terrain'Length) * 100.0, 0) & "%");
 
       Compute_Shadows (0.0);
 
@@ -373,7 +374,7 @@ package body Maps.Terrain is
 
    begin
 
-      Ada.Text_IO.Put_Line ("loading terrain grid");
+      Utility.Log.Put_Message ("loading terrain grid");
 
       if Ada.Directories.Exists (Dat_File_Name) then
 
@@ -410,7 +411,7 @@ package body Maps.Terrain is
 
                      N := Natural'Value (Value);
 
-                     Ada.Text_IO.Put_Line ("N =" & Natural'Image (N));
+                     Utility.Log.Put_Message ("N =" & Natural'Image (N));
 
                   elsif Key = "nrows" then
 
@@ -418,7 +419,7 @@ package body Maps.Terrain is
 
                      I := M - 1;
 
-                     Ada.Text_IO.Put_Line ("M =" & Natural'Image (M));
+                     Utility.Log.Put_Message ("M =" & Natural'Image (M));
 
                   elsif Key = "xllcorner" then
 
@@ -445,7 +446,7 @@ package body Maps.Terrain is
 
                if N * M > Terrain'Length then
 
-                  Ada.Text_IO.Put_Line (Terrain_Too_Large_Message);
+                  Utility.Log.Put_Message (Terrain_Too_Large_Message);
 
                   Clear_Grid;
 
@@ -497,11 +498,11 @@ package body Maps.Terrain is
 
          Ada.Text_IO.Close (File_Id);
 
-         Ada.Text_IO.Put_Line ("terrain data loaded");
+         Utility.Log.Put_Message ("terrain data loaded");
 
          -- Normalize altitude
          ----------------------------------------------
-         Ada.Text_IO.Put_Line ("normalizing altitude");
+         Utility.Log.Put_Message ("normalizing altitude");
 
          Loaded := True;
 
@@ -511,23 +512,23 @@ package body Maps.Terrain is
 
          Middle.Lon := Reference.Lon + Long_Float (0.5 * Float (N) * Cell_Size);
 
-         Ada.Text_IO.Put_Line ("Lat: " & Long_Float'Image (Middle.Lat));
+         Utility.Log.Put_Message ("Lat: " & Long_Float'Image (Middle.Lat));
 
-         Ada.Text_IO.Put_Line ("Lon :" & Long_Float'Image (Middle.Lon));
+         Utility.Log.Put_Message ("Lon :" & Long_Float'Image (Middle.Lon));
 
-         Ada.Text_IO.Put_Line ("Zmin:" & Float'Image (Z_Min));
+         Utility.Log.Put_Message ("Zmin:" & Float'Image (Z_Min));
 
-         Ada.Text_IO.Put_Line ("Zmax:" & Float'Image (Z_Max));
+         Utility.Log.Put_Message ("Zmax:" & Float'Image (Z_Max));
 
-         Ada.Text_IO.Put_Line ("Size:" & Natural'Image (Float'Size * I / 8_000_000) & "MB");
+         Utility.Log.Put_Message ("Size:" & Natural'Image (Float'Size * I / 8_000_000) & "MB");
 
-         Ada.Text_IO.Put_Line ("Unkn:" & Natural'Image (U));
+         Utility.Log.Put_Message ("Unkn:" & Natural'Image (U));
 
-         Ada.Text_IO.Put_Line ("terrain grid loaded");
+         Utility.Log.Put_Message ("terrain grid loaded");
 
       else
 
-         Ada.Text_IO.Put_Line ("terrain data not found");
+         Utility.Log.Put_Message ("terrain data not found");
 
          Clear_Grid;
 
@@ -537,7 +538,7 @@ package body Maps.Terrain is
 
       when E : others =>
 
-         Ada.Text_IO.Put_Line ("failed to load the terrain");
+         Utility.Log.Put_Message ("failed to load the terrain");
 
          Loaded := False;
 
@@ -565,7 +566,7 @@ package body Maps.Terrain is
 
       if N * M <= Terrain'Length then
 
-         Ada.Text_IO.Put_Line ("saving terrain data in binary");
+         Utility.Log.Put_Message ("saving terrain data in binary");
 
          -- Start writing
          -----------------------------------------------------------------------
@@ -618,7 +619,7 @@ package body Maps.Terrain is
 
       if Ada.Directories.Exists (Bin_File_Name) then
 
-         Ada.Text_IO.Put_Line ("loading terrain data from binary");
+         Utility.Log.Put_Message ("loading terrain data from binary");
 
          -- Start writing
          -----------------------------------------------------------------------
@@ -634,7 +635,7 @@ package body Maps.Terrain is
 
          if N * M > Terrain'Length then
 
-            Ada.Text_IO.Put_Line (Terrain_Too_Large_Message);
+            Utility.Log.Put_Message (Terrain_Too_Large_Message);
 
             Clear_Grid;
 
@@ -706,7 +707,7 @@ package body Maps.Terrain is
       -----------------------------------------------
       Resolution : constant Float := 3.0;
 
-      -- The zoom levels, in number of pixel/degrees
+      -- The zoom levels, in number of degrees/pixel
       -----------------------------------------------
       Zoom_X : Float := View.Zoom * View.Shrink;
       Zoom_Y : Float := View.Zoom;
@@ -822,7 +823,7 @@ package body Maps.Terrain is
 
             -- Draw arrows indicating where the chart is and exit
 
-            Ada.Text_IO.Put_Line ("out of terrain");
+            Utility.Log.Put_Message ("out of terrain");
 
             declare
                Garbage : aliased Gl_Uint_Vec := (1 => Buffer_Id);
@@ -855,7 +856,7 @@ package body Maps.Terrain is
          -----------------------------------------------------------------------
          if Tiles_W = 0 or Tiles_H = 0 then
 
-            Ada.Text_IO.Put_Line ("out of terrain");
+            Utility.Log.Put_Message ("out of terrain");
 
             declare
                Garbage : aliased Gl_Uint_Vec := (1 => Buffer_Id);
@@ -878,6 +879,7 @@ package body Maps.Terrain is
 
          declare
 
+            P       : Position_Record;
             C, E    : Natural := 0;
             Nodes   : Gl_Float_Vec (1 .. 5 * (Tiles_H + 1) * (Tiles_W + 1));
             X, Y, Z : Float;
@@ -891,11 +893,15 @@ package body Maps.Terrain is
             -- Vertices
             --------------------
 
+            P.Lat := Long_Float (Tiles_B); -- + 0.5 * Long_Float (Tile_Size_Y);
+
             Y := (Tiles_B - Screen_B) * Scale_Y;
 
             I := (Grid_B - 1) * N;
 
             for Count_H in 0..Tiles_H loop
+
+               P.Lon := Long_Float (Tiles_L); -- + 0.5 * Long_Float (Tile_Size_X);
 
                X := (Tiles_L - Screen_L) * Scale_X;
 
@@ -915,13 +921,7 @@ package body Maps.Terrain is
 
                   end if;
 
-                  View.Find_Color (X, Y, Z,
-                                   S,
-                                   Z_Min,
-                                   Z_Max,
-                                   Scale_X,
-                                   Scale_Y,
-                                   R, G ,B);
+                  View.Find_Color (P, Z, S, Z_Min, Z_Max, R, G ,B);
 
                   C := C + 1;
                   Nodes (C) := X;
@@ -938,11 +938,15 @@ package body Maps.Terrain is
                   C := C + 1;
                   Nodes (C) := B;
 
+                  P.Lon := P.Lon + Long_Float (Tile_Size_X);
+
                   X := X + Tile_Size_X * Scale_X;
 
                   J := J + Tile_Step_X;
 
                end loop;
+
+               P.Lat := P.Lat + Long_Float (Tile_Size_Y);
 
                Y := Y + Tile_Size_Y * Scale_Y;
 
@@ -967,7 +971,7 @@ package body Maps.Terrain is
                     E + 6 > Elements'Length or
                     J2 > Gl_Ushort'Last
                   then
-                     Ada.Text_IO.Put_Line ("insuficient terrain elements buffer");
+                     Utility.Log.Put_Message ("insuficient terrain elements buffer");
                      goto Finished_Loading;
                   end if;
 
@@ -1007,7 +1011,7 @@ package body Maps.Terrain is
 
          end;
 
-         Ada.Text_IO.Put_Line ("terrain reloaded");
+         Utility.Log.Put_Message ("terrain reloaded");
 
       end if;
 
@@ -1030,7 +1034,7 @@ package body Maps.Terrain is
 
    exception
       when E : others =>
-         Ada.Text_IO.Put_Line ("error: " & Ada.Exceptions.Exception_Message (E));
+         Utility.Log.Put_Message ("error: " & Ada.Exceptions.Exception_Message (E));
 
    end Draw;
    -----------------------------------------------------------------------------
@@ -1055,7 +1059,7 @@ package body Maps.Terrain is
 
          if I in 1..M and J in 1..N then
 
-            return Float (Terrain ((I - 1) * N + J).Z);
+            return Float (Terrain ((J - 1) * N + I).Z);
 
          end if;
 

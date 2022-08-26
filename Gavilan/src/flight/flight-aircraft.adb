@@ -24,11 +24,11 @@
 -- Standard
 with Ada.Directories;
 with Ada.Text_IO;
-use  Ada.Text_IO;
 with Ada.Numerics.Elementary_Functions;
 use  Ada.Numerics.Elementary_Functions;
 -- Gnav
 with Maps.Terrain;
+with Utility.Log;
 with Utility.Strings;
 use  Utility.Strings;
 with Timing.Events;
@@ -125,7 +125,8 @@ package body Flight.Aircraft is
                                                              Gliding_Ratio => 0.0);
    
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   -- The spectrum of best gliding slopes (from 0 to 180 degrees)
+   -- Lookup table representing the spectrum of best gliding slopes 
+   -- (from 0 to 180 degrees)
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    Gliding_Spectrum : array (0..180) of Best_Gliding_Record := (others => No_Best_Gliding_Record);
    
@@ -138,6 +139,7 @@ package body Flight.Aircraft is
       Center   : Position_Record := No_Position_Record; -- reference position
       Altitude : Float           := 1000.0;             -- reference altitude
       Wind     : Vector2_Record  := No_Vector2_Record;  -- reference wind
+      Mass     : Float           := 0.0;
    
    end record;
    
@@ -179,7 +181,7 @@ package body Flight.Aircraft is
          
       end loop;
             
-      Ada.Text_IO.Put_Line ("total mass:" & Float'Image (Total_Mass));
+      Utility.Log.Put_Message ("total mass:" & Float'Image (Total_Mass));
 
    end Recalculate_Mass;
    -----------------------------------------------------------------------------
@@ -191,6 +193,8 @@ package body Flight.Aircraft is
    -- (See specification file)
    --===========================================================================
    procedure Read_Aircraft_Data is
+      
+      use Ada.Text_IO;
       
       File_Name    : constant String := "data/aircraft.dat";
 
@@ -208,7 +212,7 @@ package body Flight.Aircraft is
 
          Open (File_Id, In_File, File_Name);
 
-         Ada.Text_IO.Put_Line ("reading aircraft data");
+         Utility.Log.Put_Message ("reading aircraft data");
 
          while not End_Of_File (File_Id) loop
             
@@ -322,8 +326,8 @@ package body Flight.Aircraft is
       Calculate_Gliding_Spectrum;
       
    exception
-      when others =>         
-         Put_Line ("error while computing sink rates");               
+      when E : others =>         
+         Utility.Log.Put_Message (E, "error while computing sink rates");               
       
    end Calculate_Gliding_States;
    -----------------------------------------------------------------------------
@@ -348,6 +352,8 @@ package body Flight.Aircraft is
       
    begin
 
+      Utility.Log.Put_Message ("computing gliding spectrum");
+      
       Gliding_Spectrum := (others => No_Best_Gliding_Record);
       
       W := Float (Range_Cone.Wind.Norm2);
@@ -408,7 +414,7 @@ package body Flight.Aircraft is
             
          end loop;
          
-         Put_Line ("@" & Natural'Image (I) & " G/R=" & Float'Image (G_Max) & " V=" & Float'Image (Gliding_Spectrum (I).Airspeed));
+         -- Utility.Log.Put_Message ("@" & Natural'Image (I) & " G/R=" & Float'Image (G_Max) & " V=" & Float'Image (Gliding_Spectrum (I).Airspeed));
                
       end loop;
             
@@ -428,14 +434,14 @@ package body Flight.Aircraft is
       D : Float   := Float (V.Norm2);
       P : Float   := abs Float (Range_Cone.Wind.Angle (V));
       I : Natural := Natural (P / Float (Math.Pi) * 180.0);
-      R : Float   := Gliding_Spectrum (I).Gliding_Ratio;
+      G : Float   := Gliding_Spectrum (I).Gliding_Ratio;
       A : Float   := Range_Cone.Altitude;
       
    begin
       
-      if R > 0.0 then
+      if G > 0.0 then
                
-         return A - D / R;
+         return A - D / G;
                
       else
          
@@ -477,19 +483,37 @@ package body Flight.Aircraft is
       
       Radius : constant Float := 1.0 / 120.0; -- about 900m in latitude
       
-   begin
+      Wind_Delta : constant Long_Float := Math.Pi / 36.0;
       
-      if 
-        Flight.Data.Altitude > Range_Cone.Altitude + 20.0 or
-        Flight.Data.Altitude < Range_Cone.Altitude - 20.0 
-      then
+   begin
+       
+      -- Check if the aircraft mass changed more than 5kg
+      --------------------------------------------------------------------------
+         
+      if abs (Total_Mass - Range_Cone.Mass) >= 5.0 then
+         
+         Range_Cone.Mass := Total_Mass;
+         
+         Calculate_Gliding_States;
+         
+         Changed := True;
+         
+      end if;
+        
+      -- Check if the altitude changed more than 10m
+      --------------------------------------------------------------------------
+         
+      if abs (Flight.Data.Altitude - Range_Cone.Altitude) >= 10.0 then
          
          Range_Cone.Altitude := Flight.Data.Altitude;
          
          Changed := True;
          
       end if;
-                  
+             
+      -- Check if the distance changed more than radius
+      --------------------------------------------------------------------------
+             
       if Maps.Distance (Flight.Data.Position, Range_Cone.Center) > Radius then
             
          Range_Cone.Center := Flight.Data.Position;
@@ -498,14 +522,12 @@ package body Flight.Aircraft is
          
       end if;
          
-      --TODO: check the angle and intensity
-      -------------------------------------
+      -- Check if the wind rotated more than 5 degrees or changed more than 2m/s
+      --------------------------------------------------------------------------
          
       if 
-        Flight.Data.Wind.Get_X > Range_Cone.Wind.Get_X + 1.0 or
-        Flight.Data.Wind.Get_X < Range_Cone.Wind.Get_X - 1.0 or
-        Flight.Data.Wind.Get_Y > Range_Cone.Wind.Get_Y + 1.0 or
-        Flight.Data.Wind.Get_Y < Range_Cone.Wind.Get_Y - 1.0           
+        abs  Flight.Data.Wind.Angle (Range_Cone.Wind) >= Wind_Delta or
+        abs (Flight.Data.Wind.Norm2 - Range_Cone.Wind.Norm2) >= 2.0        
       then
          
          Range_Cone.Wind := Flight.Data.Wind;

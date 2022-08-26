@@ -30,6 +30,7 @@ with Math.Vector2;
 use  Math.Vector2;
 with Maps.Terrain;
 with Timing.Events;
+with Utility.Log;
 with Utility.Strings;
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -119,6 +120,36 @@ package body Flight.Plan is
 
 
 
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Get_Margin_Image (This : Waypoint_Record) return String is
+
+      use Utility.Strings;
+
+   begin
+
+      if This.Margin = No_Altitude then
+
+         return "N.A.";
+
+      elsif This.Margin > 0.0 then
+
+         return "}" & Float_Image (abs This.Margin, 0);
+
+      else
+
+         return "{" & Float_Image (abs This.Margin, 0);
+
+      end if;
+
+
+   end Get_Margin_Image;
+   -----------------------------------------------------------------------------
+
+
+
    --===========================================================================
    -- (See specification file)
    --===========================================================================
@@ -145,7 +176,7 @@ package body Flight.Plan is
 
          Open (File_Id, In_File, File_Name);
 
-         Ada.Text_IO.Put_Line ("reading flight plan data");
+         Utility.Log.Put_Message ("reading flight plan data");
 
          Flight_Plans := (others => No_Flight_Plan_Record);
 
@@ -174,7 +205,7 @@ package body Flight.Plan is
 
                   Override (Flight_Plans (I).Name, Value);
 
-                  Ada.Text_IO.Put_Line ("FLIGHT PLAN");
+                  Utility.Log.Put_Message ("FLIGHT PLAN");
 
                elsif Key = "WAYPOINT" then
 
@@ -188,7 +219,7 @@ package body Flight.Plan is
 
                   Flight_Plans (I).Waypoints (W).Is_Loaded := True;
 
-                  Ada.Text_IO.Put_Line ("WAYPOINT @ " & Image (Flight_Plans (I).Waypoints (W).Position));
+                  Utility.Log.Put_Message ("WAYPOINT @ " & Image (Flight_Plans (I).Waypoints (W).Position));
 
                   if W < Waypoint_Range'Last then
 
@@ -232,7 +263,7 @@ package body Flight.Plan is
 
       Create (File_Id, Out_File, File_Name);
 
-      Ada.Text_IO.Put_Line ("writing flight plan data");
+      Utility.Log.Put_Message ("writing flight plan data");
 
       for Plan of Flight.Plan.Flight_Plans loop
 
@@ -313,7 +344,7 @@ package body Flight.Plan is
          -- Altitude margin
          -----------------------------------------------------------------------
 
-         Wpt.Margin := Flight.Aircraft.Get_Final_Altitude (Wpt.Position);
+         Wpt.Margin := Flight.Aircraft.Get_Final_Altitude (Wpt.Position) - Wpt.Elevation;
 
          if Wpt.Margin = No_Altitude then
 
@@ -321,7 +352,7 @@ package body Flight.Plan is
 
          else
 
-            Wpt.In_Range := Wpt.Elevation < Wpt.Margin;
+            Wpt.In_Range := Wpt.Margin > 0.0;
 
          end if;
 

@@ -4,7 +4,7 @@ GAVILAN_PATH=~/Gavilan/bin
 
 if [ "$GAVILAN_OPTIONS" == "" ]
 then
-    GAVILAN_OPTIONS="PORT=4000"
+    GAVILAN_OPTIONS="SERIAL_STREAM" #"UDP_STREAM=4000"
 fi
 
 echo "Starting Gavilan ($GAVILAN_OPTIONS)"

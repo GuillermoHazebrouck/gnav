@@ -196,7 +196,7 @@ package body Display.Pages.Glider is
    --===========================================================================
    --
    --===========================================================================
-   procedure Draw (Width, Height : Float) is
+   procedure Draw is
 
       use Flight.Aircraft;
       use Utility.Strings;

@@ -29,6 +29,7 @@ with Glfw.Windows;
 -- Gnav
 with Display.Window;
 with Gavilan_Help;
+with Utility.Log;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -42,7 +43,9 @@ begin
 
    end if;
 
-   Ada.Text_IO.Put_Line ("Starting gavilan...");
+   Utility.Log.Init;
+
+   Utility.Log.Put_Message ("Starting Gavilan");
 
    Display.Window.Init;
 

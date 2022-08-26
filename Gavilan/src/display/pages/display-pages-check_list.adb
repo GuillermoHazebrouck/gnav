@@ -56,7 +56,7 @@ package body Display.Pages.Check_List is
    --===========================================================================
    --
    --===========================================================================
-   procedure Draw (Width, Height : Float) is
+   procedure Draw is
    begin
       
       null;

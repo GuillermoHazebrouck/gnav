@@ -28,6 +28,7 @@ with Ada.Text_IO;
 with Math.Tools;
 with Math.Vector2;
 with Math.Vector2_List;
+with Utility.Log;
 with Utility.Strings;
 
 --//////////////////////////////////////////////////////////////////////////////
@@ -100,7 +101,7 @@ package body Maps.Layers.Airspaces is
 
       end case;
 
-      --Ada.Text_IO.Put_Line ("Sexagecimal_Value " & Image & " -> " & Long_Float'Image (Result));
+      --Utility.Log.Put_Message ("Sexagecimal_Value " & Image & " -> " & Long_Float'Image (Result));
 
       return Sign * Result;
 
@@ -169,7 +170,7 @@ package body Maps.Layers.Airspaces is
 
       Airspace   : Part_Access  := null;
 
-      File_Name  : String := -Database_Path & "airspaces.dat";
+      File_Name  : String := -Dataset_Path & "airspaces.dat";
 
       Skip_Block : Boolean := False;
 
@@ -181,9 +182,9 @@ package body Maps.Layers.Airspaces is
       procedure Announce_Error (Message : String) is
       begin
 
-         Ada.Text_IO.Put_Line ("error: " & Message);
+         Utility.Log.Put_Message ("error: " & Message);
 
-         Ada.Text_IO.Put_Line ("airspace '" &  Trim (Airspace.Info.Name) & "' won't be included");
+         Utility.Log.Put_Message ("airspace '" &  Trim (Airspace.Info.Name) & "' won't be included");
 
          Layer.Parts.Remove_Item (Airspace);
 
@@ -244,7 +245,7 @@ package body Maps.Layers.Airspaces is
 
                      Airspace.Info.Points.Remove_Item (P);
 
-                     Ada.Text_IO.Put_Line ("loading airspace resources");
+                     Utility.Log.Put_Message ("loading airspace resources");
 
                      Airspace.Load_Resources;
 
@@ -276,7 +277,7 @@ package body Maps.Layers.Airspaces is
 
                         Override (Airspace.Info.Name, Line);
 
-                        Ada.Text_IO.Put_Line ("adding new airspace " & Line);
+                        Utility.Log.Put_Message ("adding new airspace " & Line);
 
                         Data_Kind := Airspace_Class;
 
@@ -339,7 +340,7 @@ package body Maps.Layers.Airspaces is
                                           Border.Name = Border_2
                                        then
 
-                                          Ada.Text_IO.Put_Line ("border " & Trim (Border.Name) & " found");
+                                          Utility.Log.Put_Message ("border " & Trim (Border.Name) & " found");
 
                                           exit;
 
@@ -351,13 +352,13 @@ package body Maps.Layers.Airspaces is
 
                                     if Border = null then
 
-                                       Ada.Text_IO.Put_Line ("borders " & Trim (Border_1) & " or " & Trim (Border_2) & " not found");
+                                       Utility.Log.Put_Message ("borders " & Trim (Border_1) & " or " & Trim (Border_2) & " not found");
 
                                     end if;
 
                                  else
 
-                                    Ada.Text_IO.Put_Line ("invalid border line name");
+                                    Utility.Log.Put_Message ("invalid border line name");
 
                                  end if;
 
@@ -534,7 +535,7 @@ package body Maps.Layers.Airspaces is
 
                                           else
 
-                                             Ada.Text_IO.Put_Line ("warning: no points loaded for border line");
+                                             Utility.Log.Put_Message ("warning: no points loaded for border line");
 
                                           end if;
 
@@ -602,7 +603,7 @@ package body Maps.Layers.Airspaces is
 
                            else
 
-                              Ada.Text_IO.Put_Line ("unrecognized line '" & Line & "'");
+                              Utility.Log.Put_Message ("unrecognized line '" & Line & "'");
 
                            end if;
 

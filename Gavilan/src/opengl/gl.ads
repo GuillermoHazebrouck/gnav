@@ -387,11 +387,6 @@ package Gl is
    procedure Log_Error (Message : String := "");
 
    --===========================================================================
-   -- Sets a message for the error log
-   --===========================================================================
-   procedure Set_Message (Message : String);
-
-   --===========================================================================
    -- Trace all errors with a callback
    --===========================================================================
    procedure Trace_Errors (Enable : Boolean);

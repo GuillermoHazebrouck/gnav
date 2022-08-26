@@ -30,7 +30,7 @@ with Ada.Text_IO;
 package body Timing.Events is
    
    --===========================================================================
-   --
+   -- (See specification file)
    --===========================================================================
    function Elapsed (This : in out Timer_Record) return Boolean is
    begin
@@ -60,12 +60,14 @@ package body Timing.Events is
    
    
    --===========================================================================
-   --
+   -- (See specification file)
    --===========================================================================
    procedure Stop (This : in out Timer_Record) is
    begin
       
       This.Active := False;
+      
+      This.Counter := 0.0;
       
    end Stop;
    -----------------------------------------------------------------------------
@@ -74,7 +76,7 @@ package body Timing.Events is
    
    
    --===========================================================================
-   --
+   -- (See specification file)
    --===========================================================================
    procedure Restart (This : in out Timer_Record) is
    begin
@@ -85,12 +87,40 @@ package body Timing.Events is
       
    end Restart;
    -----------------------------------------------------------------------------
+         
+   
+   
+   
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   procedure Pause (This : in out Timer_Record) is
+   begin
+      
+      This.Active := False;
+      
+   end Pause;
+   -----------------------------------------------------------------------------
    
    
    
    
    --===========================================================================
-   --
+   -- (See specification file)
+   --===========================================================================
+   procedure Resume (This : in out Timer_Record) is
+   begin
+      
+      This.Active := True;
+      
+   end Resume;
+   -----------------------------------------------------------------------------
+   
+   
+   
+   
+   --===========================================================================
+   -- (See specification file)
    --===========================================================================
    procedure Register_Timer (Timer : Duration; Callback : Timed_Procedure) is
    begin
@@ -120,7 +150,7 @@ package body Timing.Events is
    
    
    --===========================================================================
-   --
+   -- (See specification file)
    --===========================================================================
    function Register_Timer (Timer : Duration; Callback : Timed_Procedure) return access Timer_Record is
    begin
@@ -152,7 +182,7 @@ package body Timing.Events is
    
    
    --===========================================================================
-   --
+   -- (See specification file)
    --===========================================================================
    procedure Tick is
    begin
@@ -172,6 +202,54 @@ package body Timing.Events is
       end loop;
                
    end Tick;
+   -----------------------------------------------------------------------------
+   
+   
+   
+   
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   procedure Register_Finalization (Callback : Timed_Procedure) is
+   begin
+      
+      for I in Finalization_Stack'Range loop
+         
+         if Finalization_Stack (I) = null then
+            
+            Finalization_Stack (I) := Callback;
+            
+            return;
+            
+         end if;
+                  
+      end loop;
+            
+      Ada.Text_IO.Put_Line ("warning: could not register finalization event!");
+      
+   end Register_Finalization;
+   -----------------------------------------------------------------------------
+   
+   
+   
+   
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   procedure Finalize is
+   begin
+         
+      for I in Timer_Stack'Range loop
+         
+         if Finalization_Stack (I) /= null then
+            
+            Finalization_Stack (I).all;
+                   
+         end if;
+         
+      end loop;
+          
+   end Finalize;
    -----------------------------------------------------------------------------
    
    

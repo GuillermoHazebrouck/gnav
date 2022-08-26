@@ -58,7 +58,7 @@
        
        <chunk>
          <name>north_wind</name>
-         <format>N=%.1f</format>
+         <format>WY=%.1f</format>
          <type>float</type>
          <node>/environment/wind-from-north-fps</node>
          <factor>0.3048</factor>
@@ -66,7 +66,7 @@
         
        <chunk>
          <name>east_wind</name>
-         <format>E=%.1f</format>
+         <format>WX=%.1f</format>
          <type>float</type>
          <node>/environment/wind-from-east-fps</node>
          <factor>0.3048</factor>

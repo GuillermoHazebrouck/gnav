@@ -67,6 +67,11 @@ package Utility.Strings is
    --===========================================================================
    function "&" (Left, Right : Dynamic_String) return Dynamic_String renames Ada.Strings.Unbounded."&";
    
+   --===========================================================================
+   -- To static string
+   --===========================================================================
+   function Length (Text : Dynamic_String) return Natural renames Ada.Strings.Unbounded.Length;
+   
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    --
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -80,8 +85,19 @@ package Utility.Strings is
    --===========================================================================
    -- Reads the next item from the current cursor position
    --===========================================================================
-   function Read_Next (Object        : in out String_Buffer; 
-                       Separator     : Character := ' ') return String;
+   function Read_Next (Object    : in out String_Buffer; 
+                       Separator : Character := ' ') return String;
+   
+   --===========================================================================
+   -- Moves the cursor to the next instance of the given character
+   --===========================================================================
+   procedure Move_To_Next (Object    : in out String_Buffer; 
+                           Separator : Character := ' ');
+      
+   --===========================================================================
+   -- Indicates if the end of the stream has been reached
+   --===========================================================================
+   function End_Of_Stream (Object : in out String_Buffer) return Boolean;
    
    --===========================================================================
    -- Writes the content of the buffer in the standard output
@@ -119,6 +135,11 @@ package Utility.Strings is
    --===========================================================================
    function Trim (Text : String) return String;
        
+   --===========================================================================
+   -- Returns the text after replacing the given character
+   --===========================================================================
+   function Replace (Text : String; Original : Character; Target : Character) return String;
+   
    --===========================================================================
    -- Returns the image of the integer value
    --===========================================================================

@@ -223,7 +223,54 @@ package body Utility.Strings is
 
 
    --===========================================================================
-   --
+   -- (See specification file)
+   --===========================================================================
+   procedure Move_To_Next (Object    : in out String_Buffer;
+                           Separator : Character := ' ') is
+   begin
+
+      if Object.Loaded then
+
+         -- Move to the next separator
+         --------------------------------------------------------------------
+         while Object.Offset < Object.Length and then Object.Current /= Separator loop
+
+            Object.Offset := Object.Offset + 1;
+
+         end loop;
+
+         -- Check if the end has been reached
+         --------------------------------------------------------------------
+         if Object.Offset = Object.Length then
+
+            Object.Loaded := False;
+
+         end if;
+
+      end if;
+
+   end Move_To_Next;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function End_Of_Stream (Object : in out String_Buffer) return Boolean is
+   begin
+
+      return not Object.Loaded;
+
+   end End_Of_Stream;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
    --===========================================================================
    procedure Dump_Content (Object : in out String_Buffer) is
    begin
@@ -447,6 +494,33 @@ package body Utility.Strings is
       end if;
 
    end Trim;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Replace (Text : String; Original : Character; Target : Character) return String is
+
+      New_Text : String := Text;
+
+   begin
+
+      for I in New_Text'Range loop
+
+         if New_Text (I) = Original then
+
+            New_Text (I) := Target;
+
+         end if;
+
+      end loop;
+
+      return New_Text;
+
+   end Replace;
    -----------------------------------------------------------------------------
 
 

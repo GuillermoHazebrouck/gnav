@@ -20,14 +20,13 @@
 
 -- Depencencies
 --//////////////////////////////////////////////////////////////////////////////
-
--- External
-with Ada.Text_IO;
+-- Standard
 with Interfaces.C;
 use  Interfaces.C;
 -- Local
 with Gl.Shaders_330;
 use  Gl.Shaders_330;
+with Utility.Log;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -513,8 +512,6 @@ package body Gl.Shaders is
    --===========================================================================
    procedure Compile_Shader (Shader : Gl_Uint) is
 
-      use Ada.Text_IO;
-
       Shader_Type    : aliased Gl_Int;
       Compile_Status : aliased Gl_Int;
 
@@ -545,9 +542,9 @@ package body Gl.Shaders is
       glGetShaderiv (Shader, GL_COMPILE_STATUS, Compile_Status'Access);
 
       if Gl_Enum (Compile_Status) = GL_FALSE then
-         Put_Line ("error while compiling " & Shader_Name & " shader" & Gl_Uint'Image (Shader));
-         Put_Line (Get_Shader_Source (Shader));
-         Put_Line ("---> " & Get_Shader_Info_Log (Shader));
+         Utility.Log.Put_Message ("error while compiling " & Shader_Name & " shader" & Gl_Uint'Image (Shader));
+         Utility.Log.Put_Message (Get_Shader_Source (Shader));
+         Utility.Log.Put_Message ("---> " & Get_Shader_Info_Log (Shader));
       end if;
 
    end Compile_Shader;
@@ -853,7 +850,7 @@ package body Gl.Shaders is
 
    exception
       when E : others =>
-         Ada.Text_IO.Put_Line ("while initializing open gl context");
+         Utility.Log.Put_Message (E, "error while initializing open gl context");
 
    end Init;
    -----------------------------------------------------------------------------

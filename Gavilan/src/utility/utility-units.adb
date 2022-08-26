@@ -110,10 +110,21 @@ package body Utility.Units is
 
       case Source is
 
+         when Unit_Meter_Second =>
+
+            case Target is
+
+               when Unit_Meter_Second   => return Value;
+               when Unit_Kilometer_Hour => return Value * 3.6;
+               when Unit_Knot           => return Value * 3.6 / 1.852;
+
+            end case;
+
          when Unit_Kilometer_Hour =>
 
             case Target is
 
+               when Unit_Meter_Second   => return Value / 3.6;
                when Unit_Kilometer_Hour => return Value;
                when Unit_Knot           => return Value / 1.852;
 
@@ -123,6 +134,7 @@ package body Utility.Units is
 
             case Target is
 
+               when Unit_Meter_Second   => return Value * 1.852 / 3.6;
                when Unit_Kilometer_Hour => return Value * 1.852;
                when Unit_Knot           => return Value;
 
@@ -166,6 +178,7 @@ package body Utility.Units is
 
       case Value is
 
+         when Unit_Meter_Second   => return "M/S";
          when Unit_Kilometer_Hour => return "KM/H";
          when Unit_Knot           => return "KTS";
 

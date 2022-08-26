@@ -167,13 +167,11 @@ package Maps is
    --===========================================================================
    -- Computes the RGB componets of the terrain colormap at the given position
    --===========================================================================
-   procedure Find_Color (This : Map_View_Record;
-                         X, Y,
+   procedure Find_Color (This  : Map_View_Record;
+                         Point : Position_Record;
                          Z, S,
                          Z_Min,
-                         Z_Max,
-                         Scale_X,
-                         Scale_Y : Float;
+                         Z_Max : Float;
                          R, G, B : out Float);
 
    --===========================================================================
@@ -211,12 +209,22 @@ package Maps is
    function Position (Reference : Position_Record;
                       Vector    : Vector2_Record) return Position_Record;
 
+   --===========================================================================
+   -- Returns the name of the active dataset
+   --===========================================================================
+   function Get_Dataset_Name return String;
+
 private
+
+   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   -- The name of the active dataset (a directory in the local maps/ folder)
+   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   Dataset_Name : Dynamic_String := Empty_String;
 
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    -- The location of the database containing the active map dataset
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Database_Path : Dynamic_String := +"maps/belgium_and_south_holland/";
+   Dataset_Path : Dynamic_String := Empty_String;
 
 end Maps;
 --------------------------------------------------------------------------------

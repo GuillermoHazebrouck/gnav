@@ -28,6 +28,7 @@ with Ada.Text_IO;
 with Maps.Terrain;
 with Maps.Layers;
 with Maps.Layers.Airspaces;
+with Utility.Log;
 
 --//////////////////////////////////////////////////////////////////////////////
 --
@@ -37,8 +38,7 @@ package body Maps.Loader is
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    -- The path to the file containing the default dataset name
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Default_File : String := "maps/default.dat";
-
+   Default_File : constant String := "maps/default.dat";
 
 
 
@@ -64,18 +64,21 @@ package body Maps.Loader is
       use Ada.Directories;
       use Ada.Text_IO;
 
-      File_Id   : File_Type;
+      File_Id : File_Type;
+      Folder  : String := Get_Path (Name);
 
    begin
 
-      Ada.Text_IO.Put_Line ("loading map data from " & (-Name));
+      Utility.Log.Put_Message ("loading map data from " & (-Name));
 
-      Database_Path := + Get_Path (Name);
-
-      if Exists (-Database_Path) then
+      if Exists (Folder) then
 
          -- Set new as default
          -------------------------
+
+         Dataset_Name  := Name;
+
+         Dataset_Path := +Folder;
 
          Open (File_Id, Out_File, Default_File);
 
@@ -88,7 +91,9 @@ package body Maps.Loader is
          -- Clear but keep default
          --------------------------
 
-         Database_Path := Empty_String;
+         Dataset_Name  := Empty_String;
+
+         Dataset_Path := Empty_String;
 
       end if;
 

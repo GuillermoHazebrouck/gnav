@@ -53,10 +53,7 @@ package body Display.Pages.Strips is
                                            Glow_R    => 0.1,
                                            Glow_G    => 0.1,
                                            Glow_B    => 0.1);
-      
-   -- The font to be used
-   Font_X : Gl.Fonts.Font_Style_Record := Font_1;
-      
+  
    -- Font for the active waypoint
    Font_2 : Gl.Fonts.Font_Style_Record := Font_1;
       
@@ -75,8 +72,14 @@ package body Display.Pages.Strips is
    -- Font for status
    Font_7 : Gl.Fonts.Font_Style_Record := Font_1;
       
-   -- Font for the compass
-   Font_C : Gl.Fonts.Font_Style_Record := Font_1;
+   -- Font for the elevation of the waypoint
+   Font_8 : Gl.Fonts.Font_Style_Record := Font_1; 
+    
+   -- Font for above terrain
+   Font_A : Gl.Fonts.Font_Style_Record := Font_1;
+      
+   -- Font for below terrain
+   Font_B : Gl.Fonts.Font_Style_Record := Font_1;
    
    --///////////////////////////////////////////////////////////////////////////
    -- Actions
@@ -179,6 +182,33 @@ package body Display.Pages.Strips is
       Font_7.Glow_R := 0.1;
       Font_7.Glow_G := 0.1;
       Font_7.Glow_B := 0.1;
+      
+      -- Ground elevation
+      -----------------------
+      Font_8.Line_R := 0.7;
+      Font_8.Line_G := 0.5;
+      Font_8.Line_B := 0.0;      
+      Font_8.Glow_R := 0.1;
+      Font_8.Glow_G := 0.1;
+      Font_8.Glow_B := 0.1;
+      
+      -- Above terrain
+      -----------------------
+      Font_A.Line_R := 0.1;
+      Font_A.Line_G := 0.8;
+      Font_A.Line_B := 0.1;      
+      Font_A.Glow_R := 0.1;
+      Font_A.Glow_G := 0.1;
+      Font_A.Glow_B := 0.1;
+      
+      -- Below terrain
+      -----------------------
+      Font_B.Line_R := 0.8;
+      Font_B.Line_G := 0.1;
+      Font_B.Line_B := 0.1;      
+      Font_B.Glow_R := 0.1;
+      Font_B.Glow_G := 0.1;
+      Font_B.Glow_B := 0.1;
       
       -- Flight plan name
       -------------------------------------------------
@@ -303,7 +333,7 @@ package body Display.Pages.Strips is
    --===========================================================================
    --
    --===========================================================================
-   procedure Draw (Width, Height : Float) is 
+   procedure Draw is 
       
       use Utility.Strings;
       use Gl.Fonts;
@@ -317,6 +347,20 @@ package body Display.Pages.Strips is
       Is_Active   : Boolean := False;
       Is_Previous : Boolean := False;
       Is_Home     : Boolean := False;
+         
+      -- Font for the name of a waypoiny
+      Font_N : Gl.Fonts.Font_Style_Record;
+            
+      -- Font for the elevation of a waypoint
+      Font_E : Gl.Fonts.Font_Style_Record;
+          
+      -- Font for distance and bearing
+      Font_D : Gl.Fonts.Font_Style_Record;
+    
+      -- Font for the altitude margin
+      Font_M : Gl.Fonts.Font_Style_Record;
+      
+      use Maps;
       
    begin
        
@@ -362,8 +406,6 @@ package body Display.Pages.Strips is
       -----------------------
       Display.Flight_Panel.Draw (Width, Height);
       
-      --Display.Compass.Draw (0.90, 0.70, 0.16, Width / Height, Font_C);
-        
       -- Buttons
       -----------------------
 
@@ -400,22 +442,30 @@ package body Display.Pages.Strips is
             
             -- Select font according to status
             ----------------------------------------------
-            if I = Waypoint_Range'First then
-            
-               Font_X := Font_3;
-         
-            elsif Is_Active then
+            if Is_Active then
                
-               Font_X := Font_2;
+               Font_N := Font_2;
+            
+               Font_D := Font_2;
+               
+               Font_E := Font_8;
             
             elsif Is_Previous then
             
-               Font_X := Font_1;
+               Font_N := Font_1;
+            
+               Font_D := Font_1;
+               
+               Font_E := Font_8;
             
             else
             
-               Font_X := Font_7;
+               Font_N := Font_7;
             
+               Font_D := Font_7;
+               
+               Font_E := Font_7;
+               
             end if;
             
             A := Frm_Waypoint (I).Get_Allocation;
@@ -451,7 +501,7 @@ package body Display.Pages.Strips is
             Gl.Fonts.Draw (Trim (Waypoint_Range'Image (I)),
                            0.03, 
                            Y,
-                           Font_X,
+                           Font_N,
                            Alignment_LC);
              
             -- Blinking name when in proximity
@@ -463,7 +513,7 @@ package body Display.Pages.Strips is
                Gl.Fonts.Draw (Trim (Flight_Plan.Waypoints (I).Name),
                               X + 0.02, 
                               Y,
-                              Font_X,
+                              Font_N,
                               Alignment_LL);
                       
             end if;
@@ -473,7 +523,7 @@ package body Display.Pages.Strips is
             Gl.Fonts.Draw (Float_Image (Flight_Plan.Waypoints (I).Distance, 1),
                            X + 0.25, 
                            Y,
-                           Font_X,
+                           Font_D,
                            Alignment_LR);
          
             Gl.Fonts.Draw ("KM",
@@ -487,7 +537,7 @@ package body Display.Pages.Strips is
             Gl.Fonts.Draw (Float_Image (Flight_Plan.Waypoints (I).Bearing, 0),
                            X + 0.37, 
                            Y,
-                           Font_X,
+                           Font_D,
                            Alignment_LR);
          
             Gl.Fonts.Draw ("*",
@@ -501,7 +551,7 @@ package body Display.Pages.Strips is
             Gl.Fonts.Draw (Float_Image (Flight_Plan.Waypoints (I).Elevation, 0),
                            X + 0.51, 
                            Y,
-                           Font_7,
+                           Font_E,
                            Alignment_LR);
      
             Gl.Fonts.Draw ("M",
@@ -512,18 +562,40 @@ package body Display.Pages.Strips is
              
             -- Waypoint altitude margin
             ----------------------------------------------
-            Gl.Fonts.Draw (Float_Image (Flight_Plan.Waypoints (I).Margin, 0),
+            
+            if Is_Active or Is_Previous then
+              
+               if Flight_Plan.Waypoints (I).Margin < 0.0 or Flight_Plan.Waypoints (I).Margin = No_Altitude then
+               
+                  -- Below ground or not accessible (N.A.);
+                  Font_M := Font_B;
+                  
+               else
+                  
+                  -- Above ground
+                  Font_M := Font_A;
+                  
+               end if;
+                              
+            else
+                   
+               -- Inactive
+               Font_M := Font_7;
+                  
+            end if;
+            
+            Gl.Fonts.Draw (Flight_Plan.Waypoints (I).Get_Margin_Image,
                            X + 0.65, 
                            Y,
-                           Font_7,
+                           Font_M,
                            Alignment_LR);
-     
+            
             Gl.Fonts.Draw ("M",
                            X + 0.66,
                            Y,
                            Font_5,
                            Alignment_LL);
-         
+            
             -- Exit when reaching the bottom
             ----------------------------------------------
             exit when K = 6;

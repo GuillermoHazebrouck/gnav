@@ -551,13 +551,11 @@ package body Maps is
    --===========================================================================
    --
    --===========================================================================
-   procedure Find_Color (This : Map_View_Record;
-                         X, Y,
+   procedure Find_Color (This  : Map_View_Record;
+                         Point : Position_Record;
                          Z, S,
                          Z_Min,
-                         Z_Max,
-                         Scale_X,
-                         Scale_Y : Float;
+                         Z_Max : Float;
                          R, G, B : out Float) is
 
       use Utility.Colors;
@@ -679,10 +677,7 @@ package body Maps is
 
          declare
 
-            Lat : Long_Float := Long_Float((Y - 0.5) / Scale_Y) + This.Center.Lat;
-            Lon : Long_Float := Long_Float((X - 0.5) / Scale_X) + This.Center.Lon;
-
-            A : Float := Range_Cone_Function ((Lat, Lon));
+            A : Float := Range_Cone_Function (Point);
 
          begin
 
@@ -695,7 +690,6 @@ package body Maps is
 
                null;
 
-               --R := 0.2 * R;
                G := 0.5 * G;
                B := 0.5 * B;
 
@@ -706,7 +700,6 @@ package body Maps is
 
                R := 0.5 * R;
                G := 0.5 * G;
-               --B := 0.5 * B;
 
             end if;
 
@@ -720,6 +713,20 @@ package body Maps is
          Ada.Text_IO.Put_Line ("error while finding color");
 
    end Find_Color;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
+   -- (See specification file)
+   --===========================================================================
+   function Get_Dataset_Name return String is
+   begin
+
+      return -Dataset_Name;
+
+   end Get_Dataset_Name;
    -----------------------------------------------------------------------------
 
 end Maps;

@@ -11,8 +11,6 @@ Gavilan/sync_usb.sh
 # Map data
 Gavilan/bin/maps/belgium/terrain.bin
 
-# Stratux defaults (only script)
-Stratux/stratux/*
-Stratux/rtl-sdr/*
-Stratux/kalibrate-rtl/*
-Stratux/*.gz
+# Log data
+Gavilan/bin/log/*
+

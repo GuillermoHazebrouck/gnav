@@ -103,6 +103,11 @@ package Flight.Plan is
    function Get_Vector_Image (This : Waypoint_Record) return String;
 
    --===========================================================================
+   -- A string representation of the altitude margin
+   --===========================================================================
+   function Get_Margin_Image (This : Waypoint_Record) return String;
+
+   --===========================================================================
    --
    --===========================================================================
    function Next_Waypoint return access Waypoint_Record;

@@ -136,7 +136,7 @@ package body Display.Pages.Map is
    --===========================================================================
    --
    --===========================================================================
-   procedure Draw (Width, Height : Float) is
+   procedure Draw is
    begin
          
       Pnl_Terrain.Draw;

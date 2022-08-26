@@ -48,7 +48,7 @@ package Utility.Units is
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    --
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   type Velocity_Units is (Unit_Kilometer_Hour, Unit_Knot);
+   type Velocity_Units is (Unit_Meter_Second, Unit_Kilometer_Hour, Unit_Knot);
 
    --===========================================================================
    --

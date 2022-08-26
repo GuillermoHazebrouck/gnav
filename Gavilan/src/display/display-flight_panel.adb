@@ -27,11 +27,11 @@ with Ada.Calendar;
 with Ada.Text_IO;
 -- Gnav
 with Display.Compass;
-with Display.Route;
 with Flight;
 with Flight.Aircraft;
 with Flight.Plan;
-with Flight.Simu;
+with Flight.Representation;
+with Flight.Stream;
 with Gl.Fonts;
 with Math.Vector2;
 with Maps;
@@ -220,6 +220,20 @@ package body Display.Flight_Panel is
                                                  Glow_G    => 0.1,
                                                  Glow_B    => 0.1);
 
+   -- Fonts
+   ---------------------------------
+   Font_Error : Gl.Fonts.Font_Style_Record := (Width     => 0.010,
+                                               Height    => 0.040,
+                                               Space     => 0.008,
+                                               Rendering => Gl.Fonts.Font_Glow,
+                                               Thickness => Gl.Fonts.Font_Regular,
+                                               Line_R    => 1.0,
+                                               Line_G    => 0.0,
+                                               Line_B    => 0.0,
+                                               Glow_R    => 0.1,
+                                               Glow_G    => 0.1,
+                                               Glow_B    => 0.1);
+
    Cancel_Timer : access Timing.Events.Timer_Record := null;
 
    --===========================================================================
@@ -232,7 +246,7 @@ package body Display.Flight_Panel is
 
       Refresh     := True;
 
-      Cancel_Timer.Stop;
+      Cancel_Timer.Pause;
 
    end Cancel_Timer_Reset;
    -----------------------------------------------------------------------------
@@ -391,7 +405,7 @@ package body Display.Flight_Panel is
 
       Cancel_Timer := Timing.Events.Register_Timer (3.0, Cancel_Timer_Reset'Access);
 
-      Cancel_Timer.Stop;
+      Cancel_Timer.Pause;
 
       Initialized := True;
 
@@ -502,11 +516,23 @@ package body Display.Flight_Panel is
 
       Pnl_Speed.Draw;
 
-      Gl.Fonts.Draw (Utility.Strings.Float_Image (Convert (Flight.Data.Speed, Unit_Kilometer_Hour, Velocity_Unit), 0),
-                     0.935,
-                     0.760,
-                     Font_2,
-                     Gl.Fonts.Alignment_LR);
+      if Flight.Data.Is_Recent (Flight.Field_Speed) then
+
+         Gl.Fonts.Draw (Utility.Strings.Float_Image (Convert (Flight.Data.Speed, Unit_Kilometer_Hour, Velocity_Unit), 0),
+                        0.935,
+                        0.760,
+                        Font_2,
+                        Gl.Fonts.Alignment_LR);
+
+      else
+
+         Gl.Fonts.Draw ("---",
+                        0.935,
+                        0.760,
+                        Font_Error,
+                        Gl.Fonts.Alignment_LR);
+
+      end if;
 
       Gl.Fonts.Draw (Image (Velocity_Unit),
                      0.968,
@@ -519,11 +545,23 @@ package body Display.Flight_Panel is
 
       Pnl_Altitude.Draw;
 
-      Gl.Fonts.Draw (Utility.Strings.Float_Image (Convert (Flight.Data.Altitude, Unit_Meter, Altitude_Unit), 0),
-                     0.935,
-                     0.630,
-                     Font_2,
-                     Gl.Fonts.Alignment_LR);
+      if Flight.Data.Is_Recent (Flight.Field_Altitude) then
+
+         Gl.Fonts.Draw (Utility.Strings.Float_Image (Convert (Flight.Data.Altitude, Unit_Meter, Altitude_Unit), 0),
+                        0.935,
+                        0.630,
+                        Font_2,
+                        Gl.Fonts.Alignment_LR);
+
+      else
+
+         Gl.Fonts.Draw ("---",
+                        0.935,
+                        0.630,
+                        Font_Error,
+                        Gl.Fonts.Alignment_LR);
+
+      end if;
 
       Gl.Fonts.Draw (Image (Altitude_Unit),
                      0.968,
@@ -536,11 +574,23 @@ package body Display.Flight_Panel is
 
       Pnl_Elevation.Draw;
 
-      Gl.Fonts.Draw (Utility.Strings.Float_Image (Convert (Flight.Data.Elevation, Unit_Meter, Altitude_Unit), 0),
-                     0.935,
-                     0.500,
-                     Font_5,
-                     Gl.Fonts.Alignment_LR);
+      if Flight.Data.Is_Recent (Flight.Field_Elevation) then
+
+         Gl.Fonts.Draw (Utility.Strings.Float_Image (Convert (Flight.Data.Elevation, Unit_Meter, Altitude_Unit), 0),
+                        0.935,
+                        0.500,
+                        Font_5,
+                        Gl.Fonts.Alignment_LR);
+
+      else
+
+         Gl.Fonts.Draw ("---",
+                        0.935,
+                        0.500,
+                        Font_Error,
+                        Gl.Fonts.Alignment_LR);
+
+      end if;
 
       Gl.Fonts.Draw (Image (Altitude_Unit),
                      0.968,
