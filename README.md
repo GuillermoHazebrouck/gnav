@@ -7,7 +7,7 @@ G-NAV is an electronic flight instrument system (EFIS) for soaring based on Rasp
 The software solution is composed of the Gavilan graphical application and possibly a middleware data aquisition system.
 The development of Gavilan is the main focus of this project. The software that is required in the external hardware (SoftRF, Stratux, etc.) is not developed here.
 Gavilan is entirely written in Ada and it is powered by OpenGL and GLFW. It can run on any Linux system, including the Raspberry Pi (models 3 and 4).
-Make sure to use a recent version of the Raspberry Pi OS. Both, 32 and 64 bit versions are supported.
+Make sure to use a recent version of the Raspberry Pi OS. Both, 32 and 64 bit versions can in principle be used, although the 32-bit version might require adapting some source files.
 
 ## Recommended hardware
 For the hardware part, check our [project blog](https://sites.google.com/view/thegavilanproject/main).
