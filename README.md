@@ -40,6 +40,13 @@ When Gavilan is installed without the DEVEL option, it will run after each reboo
 ## Installation of Gavilan on your Linux PC
 If you want to make serious changes to Gavilan, it is recommended you do it from a Linux PC. In that case, do not run the `install.sh` script, but simply use your package manager to install the OpenGL and GLFW development libraries. The Ada compiler can be obtained from [GNAT](https://www.adacore.com/download). It is recommended to use the Gnat community edition.
 
+## Running a recorded file
+Every time the progam is launched, a recording is started (independently on the type of data streaming). The recording files are stored in $GNAV_PATH/Gavilan/bin/replay/.
+
+To replay a recorded file you need to start Gavilan as follows:
+
+GAVILAN_OPTIONS=FILE_STREAM='your file name'.dat ./run_gavilan.sh DEVEL
+
 ## Testing G-NAV in FlightGear
 
 If you want to test the G-NAV computer in a simulated environment (to see if it is something for you before buying the hardware), you can use FlightGear in your Linux PC. This is actually very simple:
