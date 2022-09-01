@@ -1,5 +1,5 @@
 # G-NAV
-G-NAV is an electronic flight instrument system (EFIS) for soaring based on Raspberry Pi. G-NAV is made by assembling together standard hardware and software modules, which means you can build (and repair) your own kit without little budget and without requiring a lot of technical skills.
+G-NAV is an electronic flight instrument system (EFIS) for soaring based on Raspberry Pi. G-NAV is made by assembling together standard hardware and software modules, which means you can build (and repair) your own kit with a very little budget and without requiring a lot of technical skills.
 
 > **NOTE:** G-NAV is not certified as an IFR equipment. Although a best effort is done to make the system as resilient and reliable as possible, you should never use this device as primary source of navigation or collision avoidance.
 
