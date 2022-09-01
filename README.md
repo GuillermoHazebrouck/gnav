@@ -43,9 +43,10 @@ If you want to make serious changes to Gavilan, it is recommended you do it from
 ## Running a recorded file
 Every time the progam is launched, a recording is started (independently on the type of data streaming). The recording files are stored in $GNAV_PATH/Gavilan/bin/replay/.
 
-To replay a recorded file you need to start Gavilan as follows:
-
-GAVILAN_OPTIONS=FILE_STREAM='your file name'.dat ./run_gavilan.sh DEVEL
+To replay a recorded file you need to set the GAVILAN_OPTIONS environmental variable to indicate Gavilan that the data stream is a file:
+```
+GAVILAN_OPTIONS=FILE_STREAM=<your file name>.dat ./run_gavilan.sh DEVEL
+```
 
 ## Testing G-NAV in FlightGear
 
