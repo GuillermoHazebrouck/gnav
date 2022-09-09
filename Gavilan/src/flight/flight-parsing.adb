@@ -25,6 +25,8 @@ with Ada.Command_Line;
 with Ada.Directories;
 -- Gnav
 with Flight.Traffic;
+with Flight.Wind;
+use  Flight.Wind;
 with Maps.Terrain;
 with Utility.Log;
 with Utility.Strings;
@@ -102,7 +104,7 @@ package body Flight.Parsing is
 
       -- Compute the wind if necessary
       --------------------------------------------------------------------------
-      Flight.Compute_Wind;
+      Flight.Wind.Compute_Wind;
 
    end Check_Data;
    -----------------------------------------------------------------------------
@@ -186,7 +188,7 @@ package body Flight.Parsing is
 
                when 'W' =>
 
-                  if Wind_Source = Wind_Source_Stream then
+                  if Flight.Wind.Wind_Source = Wind_Source_Stream then
 
                      -- NOTE: the FlightGear convension is used for the wind.
                      -- Y => North wind (+ means coming from the north)

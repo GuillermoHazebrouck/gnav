@@ -169,33 +169,7 @@ package Flight is
    procedure Clear_History;
    
    --===========================================================================
-   -- Stream: take the wind from the data stream when available
-   -- Computation: make an internal computation (several methods available)
-   -- Manual: enter a manual value.
-   --===========================================================================
-   type Wind_Source_Mode is (Wind_Source_Stream,
-                             Wind_Source_Computation,
-                             Wind_Source_Manual);
-   
-   --===========================================================================
-   -- The method used to compute the wind internally.
-   -- None: there is no data available to make a computation
-   -- Differential: uses the complement vector between the airspeed and the ground speed.
-   -- (this requires sensor to obtain the airspeed and the heading).
-   -- Path: uses the trajectory drift during turns (it only requires GPS data).
-   --===========================================================================
-   type Wind_Computation_Mode is (Wind_Computation_None,
-                                  Wind_Computation_Differential,
-                                  Wind_Computation_Path_Drift);
-   
-   --===========================================================================
-   -- Computes the wind using the current data:
-   -- The result depends on the source and computation modes.
-   --===========================================================================
-   procedure Compute_Wind;
-   
-   --===========================================================================
-   -- (See specification file)
+   -- Computes the rate of turn (deg/s) using recent data.
    --===========================================================================
    procedure Compute_Turn_Rate;
    
@@ -235,6 +209,11 @@ private
    --
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    Previous : Flight_Data_Record := No_Flight_Data;
+    
+   --===========================================================================
+   -- Returns the previous index in the circular history buffer
+   --===========================================================================
+   procedure Get_Previous_Index (Index : in out History_Range);
    
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    -- A counter to count the number of acquired messagess.
@@ -243,19 +222,9 @@ private
    Message_Counter : Natural := 0;
    
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   -- The actual source of wind data
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Wind_Source : Wind_Source_Mode := Wind_Source_Computation;
-   
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   -- The actual method used for the computation of the wind
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-   Wind_Computation : Wind_Computation_Mode := Wind_Computation_Path_Drift;
-   
-   --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    -- The last data time
    --+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
    Cached_Time : Time := Clock;
-   
+     
 end Flight;
 --------------------------------------------------------------------------------
