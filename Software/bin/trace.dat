@@ -1,0 +1,39 @@
+Thu 20 Apr 2023 18:00:15 CEST > STARTING GNAV (SERIAL_STREAM PROTOCOL=NMEA/FLARM UBLOX_AIRBORNE)
+Thu 20 Apr 2023 18:00:15 CEST > (operational mode)
+Thu 20 Apr 2023 18:00:15 CEST > starting front panel
+Thu 20 Apr 2023 18:00:40 CEST > shutdown requested
+Thu 20 Apr 2023 20:22:53 CEST > STARTING GNAV (SERIAL_STREAM PROTOCOL=NMEA/FLARM UBLOX_AIRBORNE)
+Thu 20 Apr 2023 20:22:53 CEST > checking upgrade...
+Thu 20 Apr 2023 20:22:53 CEST > upgraded
+Thu 20 Apr 2023 20:23:50 CEST > application stopped
+Thu 20 Apr 2023 20:35:46 CEST > STARTING GNAV (SERIAL_STREAM PROTOCOL=NMEA/FLARM UBLOX_AIRBORNE)
+Thu 20 Apr 2023 20:35:46 CEST > checking upgrade...
+Thu 20 Apr 2023 20:35:46 CEST > upgraded
+Thu 20 Apr 2023 20:39:22 CEST > application stopped
+Thu 20 Apr 2023 20:39:25 CEST > STARTING GNAV (SERIAL_STREAM PROTOCOL=NMEA/FLARM UBLOX_AIRBORNE)
+Thu 20 Apr 2023 20:39:25 CEST > checking upgrade...
+Thu 20 Apr 2023 20:39:25 CEST > nothing new found
+Thu 20 Apr 2023 20:46:51 CEST > application stopped
+Sat 22 Apr 2023 14:39:53 CEST > STARTING GNAV
+Sat 22 Apr 2023 14:39:53 CEST > (operational mode)
+Sat 22 Apr 2023 14:39:53 CEST > starting front panel
+Sat 22 Apr 2023 14:40:03 CEST > STARTING GNAV
+Sat 22 Apr 2023 14:40:03 CEST > checking upgrade...
+Sat 22 Apr 2023 14:40:03 CEST > nothing new found
+Sat 22 Apr 2023 14:40:03 CEST > application stopped
+Sat 22 Apr 2023 14:43:10 CEST > STARTING GNAV
+Sat 22 Apr 2023 14:43:10 CEST > checking upgrade...
+Sat 22 Apr 2023 14:43:10 CEST > upgraded
+Sat 22 Apr 2023 14:44:46 CEST > application stopped
+Sat 22 Apr 2023 14:44:54 CEST > STARTING GNAV
+Sat 22 Apr 2023 14:44:54 CEST > checking upgrade...
+Sat 22 Apr 2023 14:44:54 CEST > nothing new found
+Sat 22 Apr 2023 14:44:59 CEST > application stopped
+Sat 22 Apr 2023 14:45:06 CEST > STARTING GNAV
+Sat 22 Apr 2023 14:45:06 CEST > checking upgrade...
+Sat 22 Apr 2023 14:45:06 CEST > upgraded
+Sat 22 Apr 2023 14:45:52 CEST > application stopped
+Sat 22 Apr 2023 14:46:57 CEST > STARTING GNAV
+Sat 22 Apr 2023 14:46:57 CEST > checking upgrade...
+Sat 22 Apr 2023 14:46:58 CEST > upgraded
+Sat 22 Apr 2023 14:47:08 CEST > application stopped

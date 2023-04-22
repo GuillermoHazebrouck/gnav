@@ -1,0 +1,27 @@
+project gnavlib is
+
+   for Object_Dir         use "obj";
+   for Source_Dirs        use ("src/display",
+                               "src/display/pages", 
+                               "src/display/panels", 
+                               "src/flight", 
+                               "src/maps", 
+                               "src/math", 
+                               "src/opengl", 
+                               "src/stacks", 
+                               "src/timing", 
+                               "src/utility", 
+                               "src/widgets", 
+                               "src/interface");
+   for Library_Name       use "gnav";
+   for Library_Kind       use "dynamic";
+   for Library_Dir        use "lib";
+   for Library_Interface  use ("gnav_interface");
+   for Library_Options    use ("-lGLESv2");
+   for Library_Standalone use "encapsulated";
+
+    package Compiler is
+        for Default_Switches ("Ada") use ("-fPIC");
+    end Compiler;
+   
+end gnavlib; 

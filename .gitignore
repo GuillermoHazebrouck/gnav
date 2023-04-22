@@ -8,6 +8,9 @@ Gavilan/bin/gavilan
 Gavilan/sync_nas.sh
 Gavilan/sync_usb.sh
 
+# Recording data
+Gavilan/bin/replay/*
+
 # Map data
 Gavilan/bin/maps/belgium/terrain.bin
 

@@ -1,0 +1,17 @@
+Configuration of FLIGHT GEAR for G-NAV
+--------------------------------------
+
+If you want to test the G-NAV computer in a simulated environment 
+using Flight Gear, follow these two steps:
+
+SETP 1:
+Copy the Gavilan/etc/gavilan_protocol.xml file into the flight gear generic
+protocol configuration folder (typically "/usr/share/games/flightgear/Protocol/").
+
+STEP 2:
+Launch Flight Gear using the next options:
+
+--generic=socket,out,4,gha_lnx,4000,udp,gavilan_protocol
+
+Note that Flight Gear also provides a textbox in the graphic interface to load 
+these startup options, so it is not required to use the console.

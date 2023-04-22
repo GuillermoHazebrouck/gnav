@@ -1,0 +1,317 @@
+V "GNAT Lib v2020"
+A -gnatA
+A -fPIC
+A -mtune=generic
+A -march=x86-64
+P SL SS ZX
+
+RN
+RV NO_FLOATING_POINT
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_IMPLEMENTATION_PRAGMAS
+
+U gnav_interface%b	gnav_interface.adb	93552d61 NE OO PK
+W ada%s			ada.ads			ada.ali
+W ada.real_time%s	a-reatim.adb		a-reatim.ali
+W display%s		display.ads		display.ali
+W display.menu%s	display-menu.adb	display-menu.ali
+W flight%s		flight.adb		flight.ali
+W flight.aircraft%s	flight-aircraft.adb	flight-aircraft.ali
+W flight.plan%s		flight-plan.adb		flight-plan.ali
+W flight.representation%s  flight-representation.adb  flight-representation.ali
+W flight.stream%s	flight-stream.adb	flight-stream.ali
+W gl%s			gl.adb			gl.ali
+W gl.fonts%s		gl-fonts.adb		gl-fonts.ali
+W gl.shaders%s		gl-shaders.adb		gl-shaders.ali
+W timing%s		timing.ads		timing.ali
+W timing.events%s	timing-events.adb	timing-events.ali
+W utility%s		utility.ads		utility.ali
+W utility.log%s		utility-log.adb		utility-log.ali
+W utility.strings%s	utility-strings.adb	utility-strings.ali
+W widgets%s		widgets.ads		widgets.ali
+W widgets.keyboard%s	widgets-keyboard.adb	widgets-keyboard.ali
+
+U gnav_interface%s	gnav_interface.ads	5ecfccf7 EE NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+W interfaces.c%s	i-c.adb			i-c.ali
+
+D ada.ads		20200228061809 76789da1 ada%s
+D a-calend.ads		20200228061809 474d9720 ada.calendar%s
+D a-calfor.ads		20200228061809 0f4707d1 ada.calendar.formatting%s
+D a-catizo.ads		20200313060446 eaa56756 ada.calendar.time_zones%s
+D a-charac.ads		20200228061809 2d3ec45b ada.characters%s
+D a-chlat1.ads		20200228061809 66457d31 ada.characters.latin_1%s
+D a-except.ads		20200228061809 a7106115 ada.exceptions%s
+D a-finali.ads		20200228061809 bf4f806b ada.finalization%s
+D a-numeri.ads		20200228061809 bb51c45a ada.numerics%s
+D a-reatim.ads		20200228061809 0240fc73 ada.real_time%s
+D a-stream.ads		20200228061809 119b8fb3 ada.streams%s
+D a-string.ads		20200228061809 90ac6797 ada.strings%s
+D a-strmap.ads		20200228061809 e8bb714a ada.strings.maps%s
+D a-strunb.ads		20200304060543 1656705b ada.strings.unbounded%s
+D a-tags.ads		20200228061809 edddc8f0 ada.tags%s
+D a-unccon.ads		20200228061809 0e9b276f ada.unchecked_conversion%s
+D a-uncdea.ads		20200228061809 eff36322 ada.unchecked_deallocation%s
+D display.ads		20230118194714 76cf9d82 display%s
+D display-menu.ads	20211202192126 65a6ff19 display.menu%s
+D flight.ads		20230312140609 73a5bb09 flight%s
+D flight-aircraft.ads	20230320172806 6095481d flight.aircraft%s
+D flight-plan.ads	20230417190314 97dbc5b3 flight.plan%s
+D flight-representation.ads  20230411124229 09f8f384 flight.representation%s
+D flight-stream.ads	20230418192828 82af771b flight.stream%s
+D gl.ads		20211202091500 b2e632a0 gl%s
+D gl-colors.ads		20230309135353 2aef3940 gl.colors%s
+D gl-fonts.ads		20230220135326 f8a9f01e gl.fonts%s
+D gl-resources.ads	20211114195200 5bf24487 gl.resources%s
+D gl-shaders.ads	20230220134645 2f911b80 gl.shaders%s
+D gnav_interface.ads	20230420064016 98eb36b4 gnav_interface%s
+D gnav_interface.adb	20230420064123 f580edf6 gnav_interface%b
+D interfac.ads		20200228061809 5ab55268 interfaces%s
+D i-c.ads		20200228061809 c624fa43 interfaces.c%s
+D i-cstrin.ads		20200228061809 341d0ddf interfaces.c.strings%s
+D maps.ads		20230301101317 551603a9 maps%s
+D math.ads		20211114194942 879d749c math%s
+D math-generic_vector2.ads  20211114194959 74384689 math.generic_vector2%s
+D math-vector2.ads	20211114195011 fae9aec1 math.vector2%s
+D stacks.ads		20211114195232 8ffe0c84 stacks%s
+D stacks-linked.ads	20211114195444 fc266ea4 stacks.linked%s
+D system.ads		20200228061809 4635ec04 system%s
+D s-atacco.ads		20200228061809 4c36d12f system.address_to_access_conversions%s
+D s-atocou.ads		20200228061809 b45c2d8d system.atomic_counters%s
+D s-exctab.ads		20200228061809 54135002 system.exception_table%s
+D s-finmas.ads		20200228061809 7811a767 system.finalization_masters%s
+D s-finroo.ads		20200228061809 4ff27390 system.finalization_root%s
+D s-linux.ads		20200228061809 ed0b8aee system.linux%s
+D s-multip.ads		20200228061809 38ac9f73 system.multiprocessors%s
+D s-oscons.ads		20200430104914 ffb5e830 system.os_constants%s
+D s-osinte.ads		20200424050625 675bad69 system.os_interface%s
+D s-parame.ads		20200228061809 4752c4cb system.parameters%s
+D s-secsta.ads		20200327060539 9b3ab94b system.secondary_stack%s
+D s-soflin.ads		20200228061809 a7318a92 system.soft_links%s
+D s-stache.ads		20200228061809 a37c21ec system.stack_checking%s
+D s-stausa.ads		20200228061809 017a0a05 system.stack_usage%s
+D s-stalib.ads		20200228061809 6b7a13f2 system.standard_library%s
+D s-stoele.ads		20200228061809 2dc34a04 system.storage_elements%s
+D s-stopoo.ads		20200313060446 e9fa2dd8 system.storage_pools%s
+D s-stposu.ads		20200317060514 e251976f system.storage_pools.subpools%s
+D s-stratt.ads		20200424050625 9a2744e9 system.stream_attributes%s
+D s-string.ads		20200228061809 8fe54fb7 system.strings%s
+D s-ststop.ads		20200424050625 5fbf1b38 system.strings.stream_ops%s
+D s-tasinf.ads		20200228061809 2b3f8252 system.task_info%s
+D s-taspri.ads		20200228061809 f40ac08d system.task_primitives%s
+D s-taprop.ads		20200228061809 6eefbe12 system.task_primitives.operations%s
+D s-taskin.ads		20200228061809 88fba9ad system.tasking%s
+D s-traent.ads		20200228061809 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20200319060539 5ecf7212 system.unsigned_types%s
+D timing.ads		20230328074525 4626a261 timing%s
+D timing-events.ads	20211211131821 c20d9a48 timing.events%s
+D utility.ads		20230419182741 9bdd4c36 utility%s
+D utility-events.ads	20220525093302 6e7cbdb4 utility.events%s
+D utility-log.ads	20211202083658 e274b8ff utility.log%s
+D utility-strings.ads	20230306103453 c336a695 utility.strings%s
+D widgets.ads		20211114195532 f2e89dbc widgets%s
+D widgets-keyboard.ads	20211114195603 c864d2b1 widgets.keyboard%s
+D widgets-widget.ads	20230220121457 8489e759 widgets.widget%s
+G a e
+G c Z s b [gnav_start_graphics gnav_interface 49 14 none]
+G c Z s b [gnav_start_data gnav_interface 55 14 none]
+G c Z s b [gnav_size_changed gnav_interface 61 14 none]
+G c Z s b [gnav_process_timer gnav_interface 67 14 none]
+G c Z s b [gnav_set_position gnav_interface 73 14 none]
+G c Z s b [gnav_screen_pressed gnav_interface 81 14 none]
+G c Z s b [gnav_refresh_pending gnav_interface 87 13 none]
+G c Z s b [gnav_draw_frame gnav_interface 93 14 none]
+G c Z s b [gnav_stop gnav_interface 99 14 none]
+G c Z s b [gnav_test_interface gnav_interface 105 13 none]
+G c Z s s [j_environ_recordIP gnav_interface 39 9 none]
+G c Z s s [j_object_recordIP gnav_interface 43 9 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [put_message utility__log 45 14 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [init gl__shaders 71 14 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [init gl__fonts 82 14 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [init widgets__keyboard 56 14 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [init display__menu 32 14 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [translate gl 251 14 none]
+G r c none [gnav_start_graphics gnav_interface 49 14 none] [scale gl 246 14 none]
+G r c none [gnav_start_data gnav_interface 55 14 none] [init utility__log 35 14 none]
+G r c none [gnav_start_data gnav_interface 55 14 none] [put_message utility__log 45 14 none]
+G r c none [gnav_start_data gnav_interface 55 14 none] [init flight__stream 65 14 none]
+G r c none [gnav_start_data gnav_interface 55 14 none] [init flight__aircraft 307 14 none]
+G r c none [gnav_start_data gnav_interface 55 14 none] [init flight__plan 35 14 none]
+G r c none [gnav_process_timer gnav_interface 67 14 none] [tick timing__events 72 14 none]
+G r c none [gnav_set_position gnav_interface 73 14 none] [set_data flight__stream 110 14 none]
+G r c none [gnav_screen_pressed gnav_interface 81 14 none] [screen_pressed display__menu 42 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [enable gl 276 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [blend_func gl 307 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [clear_color gl 290 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [clear gl 289 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [viewport gl 284 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [bind_shader gl__shaders 78 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [load_matrix gl__shaders 83 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [load_aspect gl__shaders 98 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [flush_path flight__representation 42 14 none]
+G r c none [gnav_draw_frame gnav_interface 93 14 none] [draw display__menu 37 14 none]
+G r c none [gnav_stop gnav_interface 99 14 none] [finalize flight__stream 70 14 none]
+G r c none [gnav_stop gnav_interface 99 14 none] [put_message utility__log 45 14 none]
+X 1 ada.ads
+16K9*Ada 20e8 31|25r6 26r6
+X 10 a-reatim.ads
+39K13*Real_Time 185e18 31|25w10 26r10
+X 18 display.ads
+30K9*Display 71e12 31|28w6 29r6 83r7 100r7 102r7 116r7 122r7 136r7 138r7
+. 140r7 154r7 168r10 193r10 203r36 204r36 210r50 211r50 221r10 223r10 241r7
+. 243r7 243r28
+35b4*Refresh{boolean} 31|83m15 122m15 140m15 168r18 193r18 223m18 241m15
+40b4*Blink{boolean} 31|243m15 243r36
+55f4*Width{float} 31|102m15 136m15 203r44 210r58
+60f4*Height{float} 31|100m15 138m15 204r44 211r58
+X 19 display-menu.ads
+27K17*Menu 49e17 31|29w14 116r15 154r15 221r18
+32U14*Init 31|116s20
+37U14*Draw 31|221s23
+42U14*Screen_Pressed 31|154s20
+X 20 flight.ads
+38K9*Flight 289e11 31|32r6 33r6 34r6 35r6 77r7 79r7 81r7 216r10 259r7 277r7
+X 21 flight-aircraft.ads
+37K16*Aircraft 314e20 31|32w13 79r14
+307U14*Init 31|79s23
+X 22 flight-plan.ads
+30K16*Plan 346e16 31|33w13 81r14
+35U14*Init 31|81s19
+X 23 flight-representation.ads
+31K16*Representation 49e26 31|34w13 216r17
+42U14*Flush_Path 31|216s32
+X 24 flight-stream.ads
+45K16*Stream 119e18 31|35w13 77r14 259r14 277r14
+65U14*Init 31|77s21
+70U14*Finalize 31|277s21
+110U14*Set_Data 31|259s21
+X 25 gl.ads
+37K9*Gl 472e7 31|36w6 37r6 38r6 54r13 54r28 96r11 106r7 106r24 110r7 118r7
+. 120r7 189r11 198r10 199r10 200r10 201r10 202r10 206r10 206r34 208r10 210r10
+55I12*Gl_Sizei{33|35I9} 31|203r26 204r26
+57F12*Gl_Float{float} 31|210r40 211r40
+67I12*Gl_Enum<integer>
+68M12*Gl_Bitfield
+121i4*GL_BLEND{67I12} 31|198r26
+123i4*GL_SRC_ALPHA{67I12} 31|199r26
+124i4*GL_ONE_MINUS_SRC_ALPHA{67I12} 31|199r40
+179m4*GL_DEPTH_BUFFER_BIT{68M12} 31|201r48
+185m4*GL_COLOR_BUFFER_BIT{68M12} 31|201r26
+236A9*Gl_Mat_4(57F12) 31|54r16
+241a4*Gl_Mat_4_Identity{236A9} 31|54r31
+246U14*Scale 31|120s10
+251U14*Translate 31|118s10
+276U14*Enable 31|198s13
+284U14*Viewport 31|202s13
+289U14*Clear 31|201s13
+290U14*Clear_Color 31|200s13
+307U14*Blend_Func 31|199s13
+X 27 gl-fonts.ads
+31K12*Fonts 106e13 31|38w9 110r10
+82U14*Init 31|110s16
+X 29 gl-shaders.ads
+50K12*Shaders 134e15 31|37w9 106r10 106r27 206r13 206r37 208r13 210r13
+55n27*Glsl_330{55E9} 31|106r35
+64n26*Lines_2D{60E9} 31|206r45
+71U14*Init 31|106s18
+78U14*Bind_Shader 31|206s21
+83U14*Load_Matrix 31|208s21
+98U14*Load_Aspect 31|210s21
+X 30 gnav_interface.ads
+30K9*Gnav_Interface 108l5 108e19 31|47b14 297l5 297t19
+33I12*J_Int{33|35I9} 61r87 87r89 105r88 105r102 31|133r87 289r88 289r102
+34I12*J_Long{33|37I9} 81r89
+35F12*J_Float{33|66F9} 75r49 31|256r49
+36F12*J_Double{33|67F9} 74r49 31|255r49
+39R9*J_Environ_Record 40r36
+40P9*J_Environ_Access(39R9) 49r41 55r37 61r39 67r40 73r39 81r41 87r41 93r37
+. 99r31 105r40 31|66r37 94r41 133r39 151r41 165r41 187r37 236r40 254r39 274r31
+. 289r40
+43R9*J_Object_Record 44r35
+44P9*J_Object_Access(43R9) 49r65 55r61 61r63 67r64 73r63 81r65 87r65 93r61
+. 99r55 105r64 31|66r61 94r65 133r63 151r65 165r65 187r61 236r64 254r63 274r55
+. 289r64
+49U14*Gnav_Start_Graphics 49>35 49>59 50i<c,Java_gnavInterface_startGraphics>22
+. 31|94b14 124l8 124t27
+49p35 Env{40P9} 31|94b35
+49p59 Obj{44P9} 31|94b59
+55U14*Gnav_Start_Data 55>31 55>55 56i<c,Java_gnavInterface_startData>22 31|66b14
+. 85l8 85t23
+55p31 Env{40P9} 31|66b31
+55p55 Obj{44P9} 31|66b55
+61U14*Gnav_Size_Changed 61>33 61>57 61>80 61>83 62i<c,Java_gnavInterface_sizeChanged>22
+. 31|133b14 142l8 142t25
+61p33 Env{40P9} 31|133b33
+61p57 Obj{44P9} 31|133b57
+61i80 W{33I12} 31|133b80 136r46
+61i83 H{33I12} 31|133b83 138r33
+67U14*Gnav_Process_Timer 67>34 67>58 68i<c,Java_gnavInterface_processTimer>22
+. 31|236b14 245l8 245t26
+67p34 Env{40P9} 31|236b34
+67p58 Obj{44P9} 31|236b58
+73U14*Gnav_Set_Position 73>33 73>57 74>33 74>38 74>43 75>33 75>38 76i<c,Java_gnavInterface_setPosition>22
+. 31|254b14 265l8 265t25
+73p33 Env{40P9} 31|254b33
+73p57 Obj{44P9} 31|254b57
+74f33 Lat{36F12} 31|255b33 259r43
+74f38 Lon{36F12} 31|255b38 260r43
+74f43 Alt{36F12} 31|255b43 261r38
+75f33 Spd{35F12} 31|256b33 262r38
+75f38 Brg{35F12} 31|256b38 263r38
+81U14*Gnav_Screen_Pressed 81>35 81>59 81>82 81>85 82i<c,Java_gnavInterface_screenPressed>22
+. 31|151b14 156l8 156t27
+81p35 Env{40P9} 31|151b35
+81p59 Obj{44P9} 31|151b59
+81i82 X{34I12} 31|151b82 154r43
+81i85 Y{34I12} 31|151b85 154r55
+87V13*Gnav_Refresh_Pending{33I12} 87>35 87>59 88i<c,Java_gnavInterface_refreshPending>22
+. 31|165b13 178l8 178t28
+87p35 Env{40P9} 31|165b35
+87p59 Obj{44P9} 31|165b59
+93U14*Gnav_Draw_Frame 93>31 93>55 94i<c,Java_gnavInterface_drawFrame>22 31|187b14
+. 227l8 227t23
+93p31 Env{40P9} 31|187b31
+93p55 Obj{44P9} 31|187b55
+99U14*Gnav_Stop 99>25 99>49 100i<c,Java_gnavInterface_stop>22 31|274b14 281l8
+. 281t17
+99p25 Env{40P9} 31|274b25
+99p49 Obj{44P9} 31|274b49
+105V13*Gnav_Test_Interface{33I12} 105>34 105>58 105>81 105>84 106i<c,Java_gnavInterface_testInterface>22
+. 31|289b13 294l8 294t27
+105p34 Env{40P9} 31|289b34
+105p58 Obj{44P9} 31|289b58
+105i81 X{33I12} 31|289b81 292r14
+105i84 Y{33I12} 31|289b84 292r18
+X 31 gnav_interface.adb
+54a4 Matrix{25|236A9} 118m21 118r21 120m21 120r21 208r34
+60f4 Distorsion{float} 136r26 210r67
+X 32 interfac.ads
+38K9*Interfaces 30|24r6 25r6 32|184e15
+X 33 i-c.ads
+18K20*C 30|24w17 25r17 33|232e17
+35I9*int<integer> 30|33r24 31|165r89
+37I9*long<long_integer> 30|34r24 31|151r89
+66F9*C_float<float> 30|35r24
+67F9*double<long_float> 30|36r24
+X 55 s-stausa.ads
+208U14*Initialize 209i<c,__gnat_stack_usage_initialize>22
+273U14*Output_Results 277i<c,__gnat_stack_usage_output_results>22
+X 69 timing.ads
+27K9*Timing 31|30w6 31r6 239r7 69|34e11
+X 70 timing-events.ads
+27K16*Events 31|31w13 239r14 70|115e18
+72U14*Tick 31|239s21
+X 71 utility.ads
+27K9*Utility 31|39w6 40r6 41r6 73r7 75r7 104r7 108r7 112r7 279r7 71|32e12
+X 73 utility-log.ads
+30K17*Log 31|40w14 73r15 75r15 104r15 108r15 112r15 279r15 73|52e16
+35U14*Init 31|73s19
+45U14*Put_Message 31|75s19 104s19 108s19 112s19 279s19
+X 74 utility-strings.ads
+33K17*Strings 31|41w14 74|211e20
+X 75 widgets.ads
+27K9*Widgets 31|42r6 114r7 75|31e12
+X 76 widgets-keyboard.ads
+31K17*Keyboard 31|42w14 114r15 76|78e21
+56U14*Init 31|114s24
+
