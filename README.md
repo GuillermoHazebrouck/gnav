@@ -12,12 +12,22 @@ If you are using Raspberry Pi, make sure to use a recent version of the OS.
 
 ## Hardware
 For the hardware you will need:
-- An ARM board like Raspberry Pi (2GB RAM should be sufficent, though 4GB will not harm).
+- An ARM board (2GB RAM should be sufficent, though 4GB will not harm).
 - 16 or 32 GB good quality micro SD to install the OS.
-- 5" or 7" standard DSI touch screen (by Raspberry Pi or any other vendor).
+- 5" or 7" standard DSI touch screen.
 - Hardware encasing (for the 3D printed parts, check the Hardware folder).
 - For real application you will need a data aquisition system (providing GPS, Flarm and other capabilities).
 - A powerbank (ideally at least 10Ah).
+
+The SMI port for video is probably the best option to connect the screen, since it is very compact and does not use the GPIO ports. If the GPIO ports are used by the screen (like for some models of HyperPixel), you will not be able to install the wheel and the buttons directly to the board.
+
+About the screen size, the 7" provided by Raspberry Pi can be too large to fit in most gliders (especially if the computer is not permanently installed on the dashboard). The 5" screen provides a good balance between size and legibility.
+
+The ARM board that is beeing used are Raspberry Pi 3B and 4B. Other alternatives that should work as well (but have not been tested) are:
+- Banana Pi BPI-M6
+- Asus Tinkerboard
+
+A RAM memory of 2GB should be sufficient in any case, although this has not been tested. Consider that the most memory demanding data is the terrain (which can easily reach up to 60MB for a decent grid), and there should be sufficient memory left for other data and tasks.
 
 ### GNSS:
 For the hardware exploration model, an U-BLOX M8N GNSS chip is beeing used (U-BLOX provides very cost-effective GPS solutions). Be aware that it is important to find a proper antenna in order to get an stable signal in a wide range of GNSS systems. Even if your GNSS chip is able to process signals from several GNSS providers, the data it receives depends entirely on the antenna, so it is worth investing in a good one. Active antennas are preferable. Antennas provided by Taoglass, for example, are a good quality and not too expensive.
@@ -25,7 +35,7 @@ For the hardware exploration model, an U-BLOX M8N GNSS chip is beeing used (U-BL
 ### SoftRF dongles:
 Using the SoftRF dongles (T-Beam or T-Motion) directly will work and does not require of any middleware. Just plug one of the dongles on a free USB port, configure the right serial path on the startup file, and the application will start capturing and processing the NMEA and FLARM dataframes (make sure the dongle is correctly configured for NMEA/FLARM).
 
-## Installation of Gavilan on Raspberry Pi
+## Installation of G-NAV on Raspberry Pi
 To install the application on your Rasperry Pi, simply clone this repository and then run the ./install.sh script:
 ```
 $ git clone github.com/GuillermoHazebrouck/gnav/
@@ -34,18 +44,20 @@ $ chmod +x install.sh
 $ sudo ./install.sh
 ```
 In the last command, use DEVEL as option for local development. Patches and replays can be done directly on the Raspberry Pi without the need of an extra PC.
-When Gavilan is installed without the DEVEL option, it will run after each reboot in maximized screen size and it will restart automatically after any malfunction.
+When G-NAV is installed without the DEVEL option, it will run after each reboot in maximized screen size and it will restart automatically after any malfunction.
 
 ## Installation of G-NAV on your Linux PC
-If you want to make serious changes to Gavilan, it is recommended you do it from a Linux PC. In that case, do not run the `install.sh` script, but simply use your package manager to install the OpenGL and GLFW development libraries. The Ada compiler can be obtained from [GNAT](https://www.adacore.com/download). It is recommended to use the Gnat community edition.
+If you want to make serious changes to G-NAV, it is recommended you do it from a Linux PC. In that case, do not run the `install.sh` script, but simply use your package manager to install the OpenGL and GLFW development libraries. The Ada compiler can be obtained from [GNAT](https://www.adacore.com/download). It is recommended to use the Gnat community edition.
 
 ## Running a recorded file
-Every time the progam is launched, a recording is started (independently on the type of data streaming). The recording files are stored in $GNAV_PATH/Gavilan/bin/replay/.
+Every time the progam is launched, a recording is started (independently on the type of data streaming). The recording files are stored in $GNAV_PATH/Software/bin/replay/.
 
-To replay a recorded file you need to set the GAVILAN_OPTIONS environmental variable to indicate Gavilan that the data stream is a file:
+To replay a recorded file you need to adapt the "setup.dat" file to indicate that the data stream is a file:
 ```
-GAVILAN_OPTIONS=FILE_STREAM=<your file name>.dat ./run_gavilan.sh DEVEL
+FILE_STREAM=<your file name>
 ```
+
+The protocol is automatically set from the replay file itself.
 
 ## Testing G-NAV in FlightGear
 
@@ -53,13 +65,14 @@ If you want to test the G-NAV computer in a simulated environment (to see if it 
 
 1. Install FlightGear.
 2. Install G-NAV.
-3. Copy the Gavilan/etc/gavilan_protocol.xml file into the FlightGear generic protocol configuration folder (typically "/usr/share/games/flightgear/Protocol/").
+3. Copy the gnav/Software/etc/gnav_protocol.xml file into the FlightGear generic protocol configuration folder (typically "/usr/share/games/flightgear/Protocol/").
 4. Launch FlightGear using the next options (note that FlightGear also provides a textbox in the graphic interface for this):
 ```
---generic=socket,out,4,<your network user id>,4000,udp,gavilan_protocol
+--generic=socket,out,4,<your network user id>,4000,udp,gnav_protocol
 ```
 5. Launch Gavilan with the command:
 ```
-export GAVILAN_OPTIONS="UDP_STREAM=4000 PROTOCOL=G-NAV"; ./run_gavilan DEVEL
+UDP_STREAM=4000
+PROTOCOL=G-NAV"
 ```
 

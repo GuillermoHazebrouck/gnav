@@ -1,5 +1,5 @@
-# Gavilan flight computer
-Gavilan is a gliding computer design around the premises of safety. The main idea is to display the minimum amount of information that is necessary to keep you in a safe zone or make you aware when you are not without distracting you too much or putting you out of the loop.
+# G-NAV flight computer
+G-NAV is a gliding computer design around the premises of safety. The main idea is to display the minimum amount of information that is necessary to keep you in a safe zone or make you aware when you are not without distracting you too much or putting you out of the loop.
 
 Some features include:
 > Data:

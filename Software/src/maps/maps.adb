@@ -574,7 +574,7 @@ package body Maps is
       5 => (Level => 0.8, Color => (0.10,0.30,0.30,1.0)),
       6 => (Level => 1.0, Color => (0.10,0.20,0.20,1.0)));
 
-   -- Gavilan colorset
+   -- G-NAV colorset
    Color_Stages_2 : constant Color_Stage_Array (1..7) :=
      (1 => (Level => 0.0/6.0, Color => (178.0/255.0, 229.0/255.0, 153.0/255.0, 1.0)),
       2 => (Level => 1.0/6.0, Color => (229.0/255.0, 255.0/255.0, 204.0/255.0, 1.0)),

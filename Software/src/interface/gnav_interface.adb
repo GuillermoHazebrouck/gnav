@@ -72,7 +72,7 @@ package body Gnav_Interface is
 
       Utility.Log.Init;
 
-      Utility.Log.Put_Message ("*** Starting Gavilan interface - V01A 29/03/2023 ***");
+      Utility.Log.Put_Message ("*** Starting G-NAV interface - V01A 29/03/2023 ***");
 
       Flight.Stream.Init;
 

@@ -1,5 +1,5 @@
 #-------------------------------------------------------------------
-# GAVILAN INSTALLATION SCRIPT
+# G-NAV INSTALLATION SCRIPT
 #
 # Function: this scrip installs the G-NAV program and default
 #           data. G-NAV must be located in the /home/pi/gnav/Software

@@ -1,19 +1,21 @@
 # Objects
-Gavilan/obj/*.o
+Software/obj/*.o
 
 # The Gavilan executable
-Gavilan/bin/gavilan
+Software/bin/gnav
+Software/bin/gnav_update
 
 # Scripts to syncrhonize the code with local storage
-Gavilan/sync_nas.sh
-Gavilan/sync_usb.sh
+sync_nas.sh
 
 # Recording data
-Gavilan/bin/replay/*
-
-# Map data
-Gavilan/bin/maps/belgium/terrain.bin
+Software/bin/replay/*
 
 # Log data
-Gavilan/bin/log/*
+Software/bin/log/*
+
+# Map data
+Software/bin/maps/belgium/terrain.bin
+Software/bin/maps/belgium/airspaces.dat
+
 

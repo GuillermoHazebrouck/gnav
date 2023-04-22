@@ -58,7 +58,7 @@ if [[ $1 == "EXE" ]] || [[ $1 == "" ]]; then
         echo "please, choose a base API for OpenGL (either GLFW or SDL)"
     fi
 
-    # NOTE: the new executable is 'gavilan_update', so that it can be compiled while the app is running
+    # NOTE: the new executable is 'gnav_update', so that it can be compiled while the app is running
     
     if [ -f $EXE_NAME ]; then
         mv -f $EXE_NAME ../bin/gnav_update

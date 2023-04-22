@@ -206,7 +206,7 @@ begin
 
    Utility.Log.Init;
 
-   Utility.Log.Put_Message ("*** Starting Gavilan under GLFW - V01A 29/03/2023 ***");
+   Utility.Log.Put_Message ("*** Starting G-NAV under GLFW - V01A 29/03/2023 ***");
 
    Glfw.Init;
 
