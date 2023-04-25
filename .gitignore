@@ -18,4 +18,5 @@ Software/bin/log/*
 Software/bin/maps/belgium/terrain.bin
 Software/bin/maps/belgium/airspaces.dat
 
-
+# Documents
+Documens/.*

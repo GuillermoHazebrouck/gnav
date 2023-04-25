@@ -2,6 +2,8 @@
 G-NAV is an electronic flight instrument system (EFIS) for soaring. G-NAV is made by assembling together standard hardware and software modules, which means you can build (and repair) your own kit with a very little budget and without requiring a lot of technical skills. You can use G-NAV
 for real applications or in a simulated environment.
 
+![G-NAV](./Documents/gnav_example_1.png)
+
 > **NOTE:** G-NAV is not certified as an IFR equipment. Although a best effort is done to make the system as resilient and reliable as possible, you should never use this device as primary source of navigation or collision avoidance.
 
 ## Software
