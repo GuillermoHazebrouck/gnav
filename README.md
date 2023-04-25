@@ -46,14 +46,20 @@ $ cd gnav/Software/
 $ chmod +x install.sh
 $ sudo ./install.sh
 ```
+The standar installation is based in GLFW. If you want to use SDL instead, you will need to install the necessary packages and adapt the scrip.
 In the last command, use DEVEL as option for local development. Patches and replays can be done directly on the Raspberry Pi without the need of an extra PC.
 When G-NAV is installed without the DEVEL option, it will run after each reboot in maximized screen size and it will restart automatically after any malfunction.
 
 ## Installation of G-NAV in a Linux PC
 If you want to make serious changes to G-NAV, it is recommended you do it from a Linux PC. In that case, do not run the `install.sh` script, but simply use your package manager to install the OpenGL and GLFW or SDL development libraries. The Ada compiler can be obtained from [GNAT](https://www.adacore.com/download). It is recommended to use the Gnat community edition.
-The scrip "build.sh" can be used to build the library, as for example:
+The scrip "build.sh" can be used to build the executable or a standalone library for Java.
 ```
 $ ./build.sh EXE GLFW
+```
+or
+
+```
+$ ./build.sh LIB
 ```
 
 ## Running a recorded file
