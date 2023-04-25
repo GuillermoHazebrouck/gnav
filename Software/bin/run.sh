@@ -62,13 +62,16 @@ then
 # Launch for operational use
 #---------------------------------------------
 else
+    echo "SERIAL_STREAM"                  >  $GNAV_SETUP_FILE
+    echo "PROTOCOL=NMEA/FLARM"            >> $GNAV_SETUP_FILE
+    echo "UBLOX_AIRBORNE"                 >> $GNAV_SETUP_FILE
 
-    echo "$(date) > (operational mode)"   >> $GNAV_TRACE_FILE
-    
-    echo "$(date) > starting front panel" >> $GNAV_TRACE_FILE
-    
+    echo "$(date) > (operational mode)"   >> $GNAV_TRACE_FILE    
+        
     # Start front panel in the background
     #-------------------------------------
+    echo "$(date) > starting front panel" >> $GNAV_TRACE_FILE
+    
     sudo python frontpanel.py &
         
     # Use patched mesa library

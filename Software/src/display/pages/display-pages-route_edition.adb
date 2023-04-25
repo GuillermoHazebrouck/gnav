@@ -39,6 +39,8 @@ with Maps.Terrain;
 with Utility.Strings;
 with Widgets.Button;
 use  Widgets.Button;
+with Widgets.Dialog;
+use  Widgets.Dialog;
 with Widgets.Keyboard;
 with Widgets.Widget;
 use  Widgets.Widget;
@@ -127,6 +129,14 @@ package body Display.Pages.Route_Edition is
                                            Space     => 0.006,
                                            Rendering => Gl.Fonts.Font_Glow,
                                            Thickness => Gl.Fonts.Font_Regular);
+
+
+   -- Internal variables
+   ---------------------------------
+
+   type Confirmation_Kinds is (Confim_Route_Removal, Confim_Waypoint_Removal, Confirm_None);
+
+   Pending_Confirmation : Confirmation_Kinds := Confirm_None;
 
    --===========================================================================
    -- Manages the focused edit
@@ -766,6 +776,58 @@ package body Display.Pages.Route_Edition is
 
 
    --===========================================================================
+   --
+   --===========================================================================
+   procedure Handle_Dialog_Action (Result : Dialog_Result_Kind) is
+   begin
+
+      case Result is
+
+         when Dialog_Ok =>
+
+            case Pending_Confirmation is
+
+               when Confim_Waypoint_Removal =>
+
+                  if Flight.Plan.Remove_Active_Waypoint then
+
+                     Refresh_Data;
+
+                     Refresh := True;
+
+                  end if;
+
+               when Confim_Route_Removal =>
+
+                  if Flight.Plan.Remove_Flight_Plan then
+
+                     Refresh_Data;
+
+                     Refresh := True;
+
+                  end if;
+
+               when others => null;
+
+            end case;
+
+            Refresh := True;
+
+         when Dialog_Cancel =>
+
+            Pending_Confirmation := Confirm_None;
+
+            Refresh := True;
+
+      end case;
+
+   end Handle_Dialog_Action;
+   -----------------------------------------------------------------------------
+
+
+
+
+   --===========================================================================
    -- (See specification file)
    --===========================================================================
    procedure Screen_Pressed (X, Y : Float) is
@@ -1012,13 +1074,11 @@ package body Display.Pages.Route_Edition is
         Btn_Wypnt_Remove.Contains (X, Y)
       then
 
-         if Flight.Plan.Remove_Active_Waypoint then
+         Pending_Confirmation := Confim_Waypoint_Removal;
 
-            Refresh_Data;
+         Widgets.Dialog.Confirm ("CONFIRM WAYPOINT REMOVAL", Handle_Dialog_Action'Access);
 
-            Refresh := True;
-
-         end if;
+         Refresh := True;
 
       elsif
         Btn_Wypnt_Append.Contains (X, Y)
@@ -1084,13 +1144,11 @@ package body Display.Pages.Route_Edition is
         Btn_Route_Remove.Contains (X, Y)
       then
 
-         if Flight.Plan.Remove_Flight_Plan then
+         Pending_Confirmation := Confim_Route_Removal;
 
-            Refresh_Data;
+         Widgets.Dialog.Confirm ("CONFIRM ROUTE REMOVAL", Handle_Dialog_Action'Access);
 
-            Refresh := True;
-
-         end if;
+         Refresh := True;
 
       elsif
         Ent_Route.Contains (X, Y)

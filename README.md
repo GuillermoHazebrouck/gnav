@@ -9,6 +9,7 @@ The software solution is composed of a graphical application and possibly a midd
 The development of the graphic application is the main focus of this project. The software that is required in the external hardware (SoftRF, Stratux, etc.) is not developed here.
 G-NAV is almost entirely written in Ada and it is powered by OpenGL(ES) and either GLFW or SDL. It can run on any Linux system, including the Raspberry Pi OS (on models 3 and 4).
 If you are using Raspberry Pi, make sure to use a recent version of the OS.
+An interface for Java (JNI) is provided with the intention of creating an Android application, although this part of the project is not done yet.
 
 ## Hardware
 For the hardware you will need:
@@ -30,10 +31,10 @@ The ARM board that is beeing used are Raspberry Pi 3B and 4B. Other alternatives
 A RAM memory of 2GB should be sufficient in any case, although this has not been tested. Consider that the most memory demanding data is the terrain (which can easily reach up to 60MB for a decent grid), and there should be sufficient memory left for other data and tasks.
 
 ### GNSS:
-For the hardware exploration model, an U-BLOX M8N GNSS chip is beeing used (U-BLOX provides very cost-effective GPS solutions). Be aware that it is important to find a proper antenna in order to get an stable signal in a wide range of GNSS systems. Even if your GNSS chip is able to process signals from several GNSS providers, the data it receives depends entirely on the antenna, so it is worth investing in a good one. Active antennas are preferable. Antennas provided by Taoglass, for example, are a good quality and not too expensive.
+For the hardware exploration model, an U-BLOX M8N GNSS chip is beeing used (U-BLOX provides a cost-effective solution). Be aware that it is important to find a proper antenna in order to get a stable signal in a wide range of GNSS systems. Even if your GNSS chip is able to process signals from several GNSS providers, the data it receives depends entirely on the antenna, so it is worth investing in a good one. Active antennas are preferable. Antennas provided by Taoglass, for example, are of good quality and not too expensive.
 
 ### SoftRF dongles:
-Using the SoftRF dongles (T-Beam or T-Motion) directly will work and does not require of any middleware. Just plug one of the dongles on a free USB port, configure the right serial path on the startup file, and the application will start capturing and processing the NMEA and FLARM dataframes (make sure the dongle is correctly configured for NMEA/FLARM).
+Using the SoftRF dongles (T-Beam or T-Motion) will work directly and does not require of any middleware. Just plug one of the dongles on a free USB port, configure the right serial path on the startup file, and the application will start capturing and processing the NMEA and FLARM dataframes (make sure the dongle is correctly configured for NMEA/FLARM).
 
 ## Installation of G-NAV on Raspberry Pi
 To install the application on your Rasperry Pi, simply clone this repository and then run the ./install.sh script:
@@ -46,8 +47,12 @@ $ sudo ./install.sh
 In the last command, use DEVEL as option for local development. Patches and replays can be done directly on the Raspberry Pi without the need of an extra PC.
 When G-NAV is installed without the DEVEL option, it will run after each reboot in maximized screen size and it will restart automatically after any malfunction.
 
-## Installation of G-NAV on your Linux PC
-If you want to make serious changes to G-NAV, it is recommended you do it from a Linux PC. In that case, do not run the `install.sh` script, but simply use your package manager to install the OpenGL and GLFW development libraries. The Ada compiler can be obtained from [GNAT](https://www.adacore.com/download). It is recommended to use the Gnat community edition.
+## Installation of G-NAV in a Linux PC
+If you want to make serious changes to G-NAV, it is recommended you do it from a Linux PC. In that case, do not run the `install.sh` script, but simply use your package manager to install the OpenGL and GLFW or SDL development libraries. The Ada compiler can be obtained from [GNAT](https://www.adacore.com/download). It is recommended to use the Gnat community edition.
+The scrip "build.sh" can be used to build the library, as for example:
+```
+$ ./build.sh EXE GLFW
+```
 
 ## Running a recorded file
 Every time the progam is launched, a recording is started (independently on the type of data streaming). The recording files are stored in $GNAV_PATH/Software/bin/replay/.
@@ -70,7 +75,7 @@ If you want to test the G-NAV computer in a simulated environment (to see if it 
 ```
 --generic=socket,out,4,<your network user id>,4000,udp,gnav_protocol
 ```
-5. Launch Gavilan with the command:
+5. Launch Gavilan with the next setup options (setup.dat):
 ```
 UDP_STREAM=4000
 PROTOCOL=G-NAV"

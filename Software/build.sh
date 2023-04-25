@@ -27,10 +27,7 @@ GNAV_SRC="-aIopengl
 
 GLFW_SRC="-aIglfw"
 
-SDL_SRC= "-aIsdl 
-          -Isdl/linux 
-          -Isdl/image 
-          -Isdl/ttf"
+SDL_SRC="-aIsdl"
 
 if [[ $1 == "EXE" ]] || [[ $1 == "" ]]; then
 

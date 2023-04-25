@@ -52,7 +52,7 @@ package body Widgets.Dialog is
 
    Visible        : Boolean := False;
 
-   Label          : String (1..20);
+   Label          : String (1..30);
 
    Font           : Font_Style_Record := (Width     => 0.010,
                                           Height    => 0.033,
