@@ -7,6 +7,9 @@ for real applications or in a simulated environment.
 > **NOTE:** G-NAV is not certified as an IFR equipment. Although a best effort is done to make the system as resilient and reliable as possible, you should never use this device as primary source of navigation or collision avoidance.
 
 ## Software
+
+> **NOTE:** I am working on a web version of the software, which I hope will be ready on 2024! This new version will run on mobile phone web browsers, while keeping the same features and appearance.
+
 The software solution is composed of a graphical application and possibly a middleware data aquisition system.
 The development of the graphic application is the main focus of this project. The software that is required in the external hardware (SoftRF, Stratux, etc.) is not developed here.
 G-NAV is almost entirely written in Ada and it is powered by OpenGL(ES) and either GLFW or SDL. It can run on any Linux system, including the Raspberry Pi OS (on models 3 and 4).
