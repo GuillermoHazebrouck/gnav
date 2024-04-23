@@ -2,15 +2,15 @@
 G-NAV is an electronic flight instrument system (EFIS) for soaring. G-NAV is made by assembling together standard hardware and software modules, which means you can build (and repair) your own kit with a very little budget and without requiring a lot of technical skills. You can use G-NAV
 for real applications or in a simulated environment.
 
-![G-NAV](./Documents/gnav_example_1.png)
-
 > [!CAUTION]
 > G-NAV is not certified as an IFR equipment. Although a best effort is done to make the system as resilient and reliable as possible, you should never use this device as primary source of navigation or collision avoidance.
 
-## Software
+> [!NOTE]
+> There is also a [web version](https://github.com/GuillermoHazebrouck/gnav-web) of the project that can be installed on most mobile systems.
 
-> [!IMPORTANT]
-> There is also a [web version](https://github.com/GuillermoHazebrouck/gnav-web) of the project.
+![G-NAV](./Documents/gnav_example_1.png)
+
+## Software
 
 The software solution is composed of a graphical application and possibly a middleware data aquisition system.
 The development of the graphic application is the main focus of this project. The software that is required in the external hardware (SoftRF, Stratux, etc.) is not developed here.
@@ -27,15 +27,16 @@ For the hardware you will need:
 - For real application you will need a data aquisition system (providing GPS, Flarm and other capabilities).
 - A powerbank (ideally at least 10Ah).
 
-The SMI port for video is probably the best option to connect the screen, since it is very compact and does not use the GPIO ports. If the GPIO ports are used by the screen (like for some models of HyperPixel), you will not be able to install the wheel and the buttons directly to the board.
-
-About the screen size, the 7" provided by Raspberry Pi can be too large to fit in most gliders (especially if the computer is not permanently installed on the dashboard). The 5" screen provides a good balance between size and legibility.
-
-The ARM board that is beeing used are Raspberry Pi 3B and 4B. Other alternatives that should work as well (but have not been tested) are:
-- Banana Pi BPI-M6
-- Asus Tinkerboard
-
-A RAM memory of 2GB should be sufficient in any case, although this has not been tested. Consider that the most memory demanding data is the terrain (which can easily reach up to 60MB for a decent grid), and there should be sufficient memory left for other data and tasks.
+> [!TIP]
+> The SMI port for video is probably the best option to connect the screen, since it is very compact and does not use the GPIO ports. If the GPIO ports are used by the screen (like for some models of HyperPixel), you will not be able to install the wheel and the buttons directly to the board.
+>
+> About the screen size, the 7" provided by Raspberry Pi can be too large to fit in most gliders (especially if the computer is not permanently installed on the dashboard). The 5" screen provides a good balance between size and legibility.
+>
+> The ARM board that is beeing used are Raspberry Pi 3B and 4B. Other alternatives that should work as well (but have not been tested) are:
+> - Banana Pi BPI-M6
+> - Asus Tinkerboard
+>
+> A RAM memory of 2GB should be sufficient in any case, although this has not been tested. Consider that the most memory demanding data is the terrain (which can easily reach up to 60MB for a decent grid), and there should be sufficient memory left for other data and tasks.
 
 ### GNSS:
 For the hardware exploration model, an U-BLOX M8N GNSS chip is beeing used (U-BLOX provides a cost-effective solution). Be aware that it is important to find a proper antenna in order to get a stable signal in a wide range of GNSS systems. Even if your GNSS chip is able to process signals from several GNSS providers, the data it receives depends entirely on the antenna, so it is worth investing in a good one. Active antennas are preferable. Antennas provided by Taoglass, for example, are of good quality and not too expensive.
