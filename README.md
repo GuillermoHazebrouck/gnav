@@ -6,7 +6,7 @@ for real applications or in a simulated environment.
 > G-NAV is not certified as an IFR equipment. Although a best effort is done to make the system as resilient and reliable as possible, you should never use this device as primary source of navigation or collision avoidance.
 
 > [!NOTE]
-> There is also a [web version](https://github.com/GuillermoHazebrouck/gnav-web) of the project that can be installed on most mobile systems.
+> There is also a [web version](https://sites.google.com/view/g-nav/) of the project that is more advanced and can be installed on most mobile systems.
 
 ![G-NAV](./Documents/gnav_example_1.png)
 
